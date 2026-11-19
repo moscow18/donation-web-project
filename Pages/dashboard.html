@@ -6,6 +6,15 @@
   <title>لوحة التحكم — منصة كسوة</title>
   <link rel="stylesheet" href="../css/style.css">
   <style>
+    .clothes-only-notice {
+      font-size: 13px;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.03);
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
     .clothes-icons-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -13,30 +22,29 @@
       margin-bottom: 12px;
     }
     .cloth-icon-card {
-      border: 1.5px solid var(--border, #e5e7eb);
+      border: 1.5px solid var(--border, rgba(0, 0, 0, 0.12));
       border-radius: 12px;
-      padding: 10px 8px;
-      background: var(--surface, #ffffff);
+      padding: 12px 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: 0.2s ease;
       text-align: center;
+      user-select: none;
     }
     .cloth-icon-card.selected {
-      border-color: var(--primary, #111827);
-      background: rgba(17, 24, 39, 0.04);
+      border-color: var(--primary, currentColor);
+      background: rgba(0, 0, 0, 0.04);
     }
     .cloth-icon-card svg {
       width: 24px;
       height: 24px;
-      color: var(--primary, #111827);
     }
     .cloth-icon-name {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
     }
     .cloth-qty-controls {
       display: flex;
@@ -48,8 +56,8 @@
       width: 24px;
       height: 24px;
       border-radius: 6px;
-      border: 1px solid var(--border, #d1d5db);
-      background: #fff;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.2));
+      background: transparent;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -70,10 +78,9 @@
       margin-top: 10px;
     }
     .item-detail-box {
-      border: 1px solid var(--border, #e5e7eb);
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
       border-radius: 10px;
       padding: 10px 12px;
-      background: var(--bg-subtle, #f9fafb);
     }
     .item-detail-head {
       display: flex;
@@ -85,34 +92,26 @@
     }
     .item-detail-row {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-bottom: 8px;
     }
     .item-detail-row select,
     .item-detail-box input {
       width: 100%;
-      padding: 7px 10px;
-      border: 1px solid var(--border, #d1d5db);
+      padding: 8px 10px;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.15));
       border-radius: 8px;
       font-size: 12px;
-      background: #fff;
       font-family: inherit;
-    }
-    .clothes-only-notice {
-      font-size: 12px;
-      color: var(--text-muted, #6b7280);
-      background: var(--bg-subtle, #f3f4f6);
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin-bottom: 14px;
+      background: transparent;
+      color: inherit;
     }
     .donation-item-card {
-      border: 1px solid var(--border, #e5e7eb);
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 12px;
-      background: #fff;
     }
     .donation-badges-row {
       display: flex;
@@ -124,13 +123,12 @@
       font-size: 12px;
       padding: 4px 10px;
       border-radius: 999px;
-      background: var(--bg-subtle, #f3f4f6);
-      border: 1px solid var(--border, #e5e7eb);
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
     }
     .verification-box {
       margin-top: 10px;
       padding-top: 10px;
-      border-top: 1px dashed var(--border, #e5e7eb);
+      border-top: 1px dashed var(--border, rgba(0, 0, 0, 0.15));
       font-size: 12px;
     }
     .inspection-thumbs {
@@ -144,9 +142,9 @@
       height: 64px;
       object-fit: cover;
       border-radius: 8px;
-      border: 1px solid var(--border, #e5e7eb);
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
     }
-    @media (max-width: 640px) {
+    @media (max-width: 600px) {
       .clothes-icons-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -161,7 +159,7 @@
   <div id="dashboard-root">
     <header class="navbar">
       <div class="container navbar-inner">
-        <a href="index.html" class="brand-logo">
+        <a href="../index.html" class="brand-logo">
           <span class="brand-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"></path>
@@ -171,7 +169,7 @@
         </a>
 
         <div class="nav-actions">
-          <a href="index.html" class="btn-secondary">الصفحة الرئيسية</a>
+          <a href="../index.html" class="btn-secondary">الصفحة الرئيسية</a>
           <button type="button" data-logout-btn="" class="btn-primary">تسجيل الخروج</button>
         </div>
       </div>
@@ -199,7 +197,7 @@
         </div>
         <div class="kpi-card">
           <span>إجمالي القطع (المعلن / المستلم)</span>
-          <strong id="kpi-total-pieces">0</strong>
+          <strong id="kpi-total-pieces">0 / 0</strong>
         </div>
         <div class="kpi-card">
           <span>طلبات قيد التنفيذ</span>
@@ -212,15 +210,14 @@
       </div>
 
       <div class="dash-main-grid">
-        <!-- لوحة المتبرع: إضافة تبرع ملابس بالأيقونات والتفاصيل فقط بدون صور -->
-        <section id="donor-booking-panel" class="dash-panel">
+        <section class="dash-panel">
           <div class="dash-panel-head">
             <h2 style="font-size: 18px; font-weight: 700;">تسجيل طلب استلام جديد</h2>
             <span class="booking-step-tag">ملابس فقط</span>
           </div>
 
           <div class="clothes-only-notice">
-            التبرعات المتاحة عبر المنصة تشمل <strong>الملابس والمنسوجات فقط</strong> (لا يتم استقبال أثاث أو أجهزة). اختر قطع الملابس وأضف تفاصيلها، وسيقوم الموظف بتصويرها وتأكيد العدد عند الاستلام.
+            التبرعات المتاحة عبر المنصة تشمل <strong>الملابس فقط</strong> (مرفوض استقبال أثاث أو أجهزة). اختر قطع الملابس وأضف تفاصيلها، وسيقوم الموظف بتصويرها واعتماد العدد الفعلي عند الاستلام.
           </div>
 
           <div class="segmented-control">
@@ -275,7 +272,7 @@
                   </div>
                 </div>
 
-                <div class="cloth-icon-card" data-icon="jacket" data-label="جاكيت / معطف">
+                <div class="cloth-icon-card" data-icon="jacket" data-label="جاكيت">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M16 3h2.5l2.5 5-2 2v11H5V10L3 8l2.5-5H8l4 3 4-3z"/>
                     <path d="M12 6v15"/>
@@ -301,7 +298,7 @@
                   </div>
                 </div>
 
-                <div class="cloth-icon-card" data-icon="dress" data-label="فستان / عباية">
+                <div class="cloth-icon-card" data-icon="dress" data-label="فستان">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M9 3h6l-1 6 4 12H6l4-12-1-6z"/>
                   </svg>
@@ -326,7 +323,6 @@
                 </div>
               </div>
 
-              <!-- تفاصيل القطع المختارة تظهر تلقائياً هنا -->
               <div id="selected-items-details" class="selected-items-details"></div>
             </div>
 
@@ -362,63 +358,63 @@
           </form>
         </section>
 
-        <!-- لوحة الموظف: تظهر فقط لحسابات employee / admin لتصوير القطع واعتماد العدد الفعلي -->
-        <section id="employee-inspection-panel" class="dash-panel" style="display: none;">
-          <div class="dash-panel-head">
-            <h2 style="font-size: 18px; font-weight: 700;">فحص وتصوير التبرع المستلم (للموظف)</h2>
-            <span class="booking-step-tag">صلاحية موظف</span>
-          </div>
-
-          <form id="employee-verify-form">
-            <div class="form-group">
-              <div class="form-label-row">
-                <label class="form-label" for="inspect-donation-id">اختر طلب التبرع</label>
-              </div>
-              <div class="input-capsule">
-                <select id="inspect-donation-id" required=""></select>
-              </div>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <section id="employee-inspection-panel" class="dash-panel" style="display: none;">
+            <div class="dash-panel-head">
+              <h2 style="font-size: 18px; font-weight: 700;">فحص وتصوير التبرع المستلم (للموظف)</h2>
+              <span class="booking-step-tag">صلاحية موظف</span>
             </div>
 
-            <div class="form-group">
-              <div class="form-label-row">
-                <label class="form-label" for="actual-pieces-input">العدد الفعلي للقطع المستلمة</label>
+            <form id="employee-verify-form">
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label" for="inspect-donation-id">اختر طلب التبرع</label>
+                </div>
+                <div class="input-capsule">
+                  <select id="inspect-donation-id" required=""></select>
+                </div>
               </div>
-              <div class="input-capsule">
-                <input type="number" id="actual-pieces-input" min="0" placeholder="مثلاً: 3" required="">
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label" for="actual-pieces-input">العدد الفعلي للقطع المستلمة</label>
+                </div>
+                <div class="input-capsule">
+                  <input type="number" id="actual-pieces-input" min="0" placeholder="مثلاً: 3" required="">
+                </div>
               </div>
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label" for="inspection-photos-input">تصوير القطع المستلمة فعلياً</label>
+                </div>
+                <div class="input-capsule">
+                  <input type="file" id="inspection-photos-input" accept="image/*" multiple="" required="">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label" for="employee-notes-input">ملاحظات الفحص والاستلام</label>
+                </div>
+                <div class="input-capsule">
+                  <input type="text" id="employee-notes-input" placeholder="مثال: تم استلام 3 قطع بدلاً من 5">
+                </div>
+              </div>
+
+              <button type="submit" id="submit-inspection-btn" class="btn-primary btn-full">حفظ الصور واعتماد العدد الفعلي</button>
+            </form>
+          </section>
+
+          <section class="dash-panel">
+            <div class="dash-panel-head">
+              <h2 style="font-size: 18px; font-weight: 700;">سجل تبرعاتك وطلبات الاستلام</h2>
+              <span style="font-size: 12px; color: var(--text-muted);">محدّث تلقائياً</span>
             </div>
 
-            <div class="form-group">
-              <div class="form-label-row">
-                <label class="form-label" for="inspection-photos-input">تصوير القطع المستلمة فعلياً</label>
-              </div>
-              <div class="input-capsule">
-                <input type="file" id="inspection-photos-input" accept="image/*" multiple="" required="">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="form-label-row">
-                <label class="form-label" for="employee-notes-input">ملاحظات الفحص والاستلام</label>
-              </div>
-              <div class="input-capsule">
-                <input type="text" id="employee-notes-input" placeholder="مثال: تم استلام 3 قطع بحالة ممتازة بدلاً من 5">
-              </div>
-            </div>
-
-            <button type="submit" id="submit-inspection-btn" class="btn-primary btn-full">حفظ الصور واعتماد العدد الفعلي</button>
-          </form>
-        </section>
-
-        <!-- سجل التبرعات -->
-        <section class="dash-panel">
-          <div class="dash-panel-head">
-            <h2 style="font-size: 18px; font-weight: 700;">سجل تبرعاتك وطلبات الاستلام</h2>
-            <span style="font-size: 12px; color: var(--text-muted);">محدّث تلقائياً</span>
-          </div>
-
-          <div id="dash-donations-list" class="donation-list"></div>
-        </section>
+            <div id="dash-donations-list" class="donation-list"></div>
+          </section>
+        </div>
       </div>
     </main>
   </div>

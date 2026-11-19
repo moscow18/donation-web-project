@@ -1,8 +1,6 @@
 const SUPABASE_URL = 'https://zsjetsailonjuwawbpke.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzamV0c2FpbG9uanV3YXdicGtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5NjkzNDgsImV4cCI6MjEwOTU0NTM0OH0.npaPD7V8FkEcjKbJBNSQPUaQG6EMVphkcJdfIuF-eis';
 
-const sb = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 const ICON_LABELS = {
   tshirt: 'تيشيرت',
   pants: 'بنطلون',
@@ -12,20 +10,52 @@ const ICON_LABELS = {
   kids_wear: 'ملابس أطفال'
 };
 
+let sb = null;
 let currentUser = null;
 let currentProfile = null;
 let selectedPickupMode = 'استلام من المنزل';
-const selectedItemsState = {}; // { tshirt: { quantity: 2, size_label: 'L', gender_age: 'men', condition_label: 'good', details: '' } }
+const selectedItemsState = {};
+
+async function resolveSupabaseClient() {
+  if (window.supabaseClient) return window.supabaseClient;
+  if (window._supabase) return window._supabase;
+  if (window.sb && typeof window.sb.auth === 'object') return window.sb;
+
+  const candidatePaths = ['../js/app.js', 'js/app.js', '/js/app.js'];
+  for (const path of candidatePaths) {
+    try {
+      const res = await fetch(path, { cache: 'no-store' });
+      if (!res.ok) continue;
+      const code = await res.text();
+      const jwtMatch = code.match(/eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/);
+      if (jwtMatch && window.supabase) {
+        return window.supabase.createClient(SUPABASE_URL, jwtMatch[0]);
+      }
+    } catch (_) {}
+  }
+  return null;
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
+  sb = await resolveSupabaseClient();
+
+  if (!sb) {
+    document.getElementById('dash-user-name').textContent = 'تعذر الاتصال بقاعدة البيانات';
+    document.getElementById('dash-user-email').textContent = 'تأكد من وجود ملف app.js داخل مجلد js/';
+    return;
+  }
+
   const { data: { session }, error } = await sb.auth.getSession();
-  if (error || !session) {
+  if (!error && !session) {
     window.location.href = 'login.html';
     return;
   }
 
-  currentUser = session.user;
-  await loadUserProfile();
+  if (session?.user) {
+    currentUser = session.user;
+    await loadUserProfile();
+  }
+
   setupPickupModeButtons();
   setupClothesIconsSelector();
   setupDonorBookingForm();
@@ -44,7 +74,7 @@ async function loadUserProfile() {
   currentProfile = profile || {
     id: currentUser.id,
     username: currentUser.email.split('@')[0],
-    full_name: currentUser.user_metadata?.full_name || currentUser.email,
+    full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email,
     role: 'donor'
   };
 
@@ -168,12 +198,10 @@ function renderSelectedItemsDetails() {
     const key = box.getAttribute('data-detail-key');
     box.querySelectorAll('[data-field]').forEach(input => {
       input.addEventListener('change', (e) => {
-        const field = e.target.getAttribute('data-field');
-        selectedItemsState[key][field] = e.target.value;
+        selectedItemsState[key][e.target.getAttribute('data-field')] = e.target.value;
       });
       input.addEventListener('input', (e) => {
-        const field = e.target.getAttribute('data-field');
-        selectedItemsState[key][field] = e.target.value;
+        selectedItemsState[key][e.target.getAttribute('data-field')] = e.target.value;
       });
     });
   });
@@ -232,7 +260,6 @@ function setupDonorBookingForm() {
 
       if (itemsErr) throw itemsErr;
 
-      // تصفير الاختيارات بعد النجاح
       itemKeys.forEach(k => delete selectedItemsState[k]);
       document.querySelectorAll('.cloth-icon-card').forEach(c => {
         c.classList.remove('selected');
@@ -401,7 +428,7 @@ function renderDonationsList(list) {
           ${itemsHtml || `<span class="mini-item-chip">ملابس (${declared} قطعة)</span>`}
         </div>
 
-        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--text-muted); margin-top: 8px;">
           <span>المعلن من المتبرع: <strong>${declared} قطعة</strong></span>
           <span>المستلم فعلياً: <strong>${hasActual ? `${d.actual_pieces_count} قطعة` : 'في انتظار فحص الموظف'}</strong></span>
           <span>الموعد: ${d.pickup_date || '-'}</span>
