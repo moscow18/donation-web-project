@@ -1,5 +1,4 @@
 const SUPABASE_URL = 'https://zsjetsailonjuwawbpke.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzamV0c2FpbG9uanV3YXdicGtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5NjkzNDgsImV4cCI6MjEwOTU0NTM0OH0.npaPD7V8FkEcjKbJBNSQPUaQG6EMVphkcJdfIuF-eis';
 
 const ICON_LABELS = {
   tshirt: 'تيشيرت',
@@ -62,6 +61,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupEmployeeInspectionForm();
   setupLogoutButton();
   await loadDonations();
+
+  // ربط الداشبورد لحظياً بتحديثات الموظف من تطبيق الموبايل أو لوحة الإدارة
+  sb.channel('kiswah-donor-live')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'donations' }, loadDonations)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'donation_items' }, loadDonations)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'donation_photos' }, loadDonations)
+    .subscribe();
 });
 
 async function loadUserProfile() {
@@ -81,11 +87,24 @@ async function loadUserProfile() {
   document.getElementById('dash-user-name').textContent = `مرحباً، ${currentProfile.full_name || currentProfile.username}`;
   document.getElementById('dash-user-email').textContent = `${currentUser.email} (@${currentProfile.username})`;
 
-  const isStaff = currentProfile.role === 'employee' || currentProfile.role === 'admin';
+  const isStaff = ['employee', 'admin', 'super_admin'].includes(currentProfile.role);
   if (isStaff) {
     document.getElementById('dash-role-badge').textContent = 'لوحة الموظف والمستلم الميداني';
     document.getElementById('dash-status-text').textContent = 'صلاحية موظف معتمد';
     document.getElementById('employee-inspection-panel').style.display = 'block';
+  }
+
+  const isAdmin = currentProfile.role === 'admin' || currentProfile.role === 'super_admin';
+  if (isAdmin) {
+    const navActions = document.querySelector('.nav-actions');
+    if (navActions && !document.getElementById('go-admin-btn')) {
+      const adminLink = document.createElement('a');
+      adminLink.id = 'go-admin-btn';
+      adminLink.href = 'admin.html';
+      adminLink.className = 'btn-secondary';
+      adminLink.textContent = 'لوحة الإدارة';
+      navActions.prepend(adminLink);
+    }
   }
 }
 

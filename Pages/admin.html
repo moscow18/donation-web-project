@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الإدارة والتحكم — منصة كسوة</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.1));
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .admin-tab-btn {
+      padding: 9px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      color: inherit;
+      transition: 0.2s ease;
+    }
+    .admin-tab-btn.active {
+      background: var(--primary, #111827);
+      color: #fff;
+      border-color: var(--primary, #111827);
+    }
+    .admin-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .admin-search-input,
+    .admin-filter-select {
+      padding: 9px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.15));
+      font-family: inherit;
+      font-size: 13px;
+      background: transparent;
+      color: inherit;
+      min-width: 220px;
+    }
+    .admin-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
+      border-radius: 12px;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: right;
+    }
+    .admin-table th,
+    .admin-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+      vertical-align: top;
+    }
+    .admin-table th {
+      font-weight: 700;
+      background: rgba(0, 0, 0, 0.02);
+      white-space: nowrap;
+    }
+    .role-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.15));
+    }
+    .role-badge.super_admin {
+      background: #111827;
+      color: #fff;
+    }
+    .role-badge.admin {
+      background: rgba(16, 185, 129, 0.12);
+      color: #065f46;
+    }
+    .role-badge.employee {
+      background: rgba(59, 130, 246, 0.12);
+      color: #1e40af;
+    }
+    .role-select-inline {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.18));
+      font-family: inherit;
+      font-size: 12px;
+      background: transparent;
+      color: inherit;
+    }
+    .mini-chip {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
+      margin: 2px;
+    }
+    .thumbs-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .thumbs-row img {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
+    }
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+  </style>
+</head>
+<body class="dashboard-layout">
+
+  <div id="admin-root">
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="../index.html" class="brand-logo">
+          <span class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"></path>
+            </svg>
+          </span>
+          <span>كسوة — الإدارة</span>
+        </a>
+
+        <div class="nav-actions">
+          <a href="dashboard.html" class="btn-secondary">لوحة التبرعات</a>
+          <a href="../index.html" class="btn-secondary">الموقع الرئيسي</a>
+          <button type="button" data-logout-btn="" class="btn-primary">تسجيل الخروج</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="dash-header-banner">
+      <div class="container dash-welcome-row">
+        <div>
+          <span id="admin-role-tag" class="booking-step-tag" style="margin-bottom: 8px; display: inline-block;">لوحة تحكم الإدارة</span>
+          <h1 id="admin-user-name" style="font-size: 26px; font-weight: 700;">جاري التحقق من الصلاحيات...</h1>
+          <p id="admin-user-email" style="font-size: 14px; color: var(--text-muted);"></p>
+        </div>
+        <div class="status-pill">
+          <span class="live-indicator">
+            <span class="live-dot"></span>
+            <span>متصل لحظياً مع تطبيق الموبايل</span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <main class="container">
+      <div class="dash-kpi-grid">
+        <div class="kpi-card">
+          <span>إجمالي طلبات المنصة</span>
+          <strong id="adm-kpi-orders">0</strong>
+        </div>
+        <div class="kpi-card">
+          <span>المعلن / المستلم فعلياً</span>
+          <strong id="adm-kpi-pieces">0 / 0</strong>
+        </div>
+        <div class="kpi-card">
+          <span>بانتظار فحص الموظف</span>
+          <strong id="adm-kpi-pending">0</strong>
+        </div>
+        <div class="kpi-card">
+          <span>إجمالي الحسابات (متبرعين / موظفين)</span>
+          <strong id="adm-kpi-users">0</strong>
+        </div>
+      </div>
+
+      <section class="dash-panel">
+        <div class="admin-tabs">
+          <button type="button" class="admin-tab-btn active" data-tab="donations-tab">جميع طلبات التبرع والفحص</button>
+          <button type="button" class="admin-tab-btn" data-tab="users-tab">إدارة الحسابات والصلاحيات (Roles)</button>
+        </div>
+
+        <!-- تبويب 1: جميع طلبات التبرع -->
+        <div id="donations-tab">
+          <div class="admin-toolbar">
+            <input type="text" id="adm-donation-search" class="admin-search-input" placeholder="بحث باسم المتبرع، العنوان، أو المبادرة...">
+            <select id="adm-donation-filter" class="admin-filter-select">
+              <option value="all">جميع الطلبات</option>
+              <option value="unverified">بانتظار فحص الموظف</option>
+              <option value="verified">تم الفحص والتصوير</option>
+            </select>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>المتبرع والتواصل</th>
+                  <th>المبادرة وطريقة الاستلام</th>
+                  <th>تفاصيل الملابس (الأيقونات)</th>
+                  <th>المعلن / المستلم</th>
+                  <th>صور فحص الموظف</th>
+                  <th>الحالة والإجراء</th>
+                </tr>
+              </thead>
+              <tbody id="adm-donations-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- تبويب 2: إدارة الحسابات والصلاحيات -->
+        <div id="users-tab" style="display: none;">
+          <div class="admin-toolbar">
+            <input type="text" id="adm-user-search" class="admin-search-input" placeholder="بحث بالاسم، اليوزرنيم، أو الإيميل...">
+            <span id="super-admin-note" style="font-size: 12px; color: var(--text-muted);"></span>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>الاسم الكامل</th>
+                  <th>اسم المستخدم (Username)</th>
+                  <th>البريد الإلكتروني</th>
+                  <th>الهاتف</th>
+                  <th>الرتبة الحالية</th>
+                  <th>تغيير الصلاحية</th>
+                </tr>
+              </thead>
+              <tbody id="adm-users-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>
