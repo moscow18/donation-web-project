@@ -1,5 +1,3 @@
-const SUPABASE_URL = 'https://zsjetsailonjuwawbpke.supabase.co';
-
 const ICON_LABELS = {
   tshirt: 'تيشيرت',
   pants: 'بنطلون',
@@ -9,68 +7,42 @@ const ICON_LABELS = {
   kids_wear: 'ملابس أطفال'
 };
 
+const GENDER_LABELS = {
+  men: 'رجالي',
+  women: 'حريمي',
+  kids: 'أطفال',
+  unisex: 'متنوع'
+};
+
+const CONDITION_LABELS = {
+  new: 'جديد بالكرتونة',
+  like_new: 'كالجديد',
+  good: 'حالة جيدة جداً'
+};
+
 let sb = null;
 let currentUser = null;
 let currentProfile = null;
 let selectedPickupMode = 'استلام من المنزل';
 const selectedItemsState = {};
 
-async function resolveSupabaseClient() {
-  if (window.supabaseClient) return window.supabaseClient;
-  if (window._supabase) return window._supabase;
-  if (window.sb && typeof window.sb.auth === 'object') return window.sb;
-
-  const candidatePaths = ['../js/app.js', 'js/app.js', '/js/app.js'];
-  for (const path of candidatePaths) {
-    try {
-      const res = await fetch(path, { cache: 'no-store' });
-      if (!res.ok) continue;
-      const code = await res.text();
-      const jwtMatch = code.match(/eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/);
-      if (jwtMatch && window.supabase) {
-        return window.supabase.createClient(SUPABASE_URL, jwtMatch[0]);
-      }
-    } catch (_) {}
-  }
-  return null;
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
-  sb = await resolveSupabaseClient();
+  window.KiswahLoader.show('جاري تحميل بوابة المتبرع...');
 
+  sb = await window.KiswahRealtime.getClient();
   if (!sb) {
-    document.getElementById('dash-user-name').textContent = 'تعذر الاتصال بقاعدة البيانات';
-    document.getElementById('dash-user-email').textContent = 'تأكد من وجود ملف app.js داخل مجلد js/';
+    window.KiswahLoader.hide();
     return;
   }
 
   const { data: { session }, error } = await sb.auth.getSession();
-  if (!error && !session) {
+  if (error || !session) {
     window.location.href = 'login.html';
     return;
   }
 
-  if (session?.user) {
-    currentUser = session.user;
-    await loadUserProfile();
-  }
+  currentUser = session.user;
 
-  setupPickupModeButtons();
-  setupClothesIconsSelector();
-  setupDonorBookingForm();
-  setupEmployeeInspectionForm();
-  setupLogoutButton();
-  await loadDonations();
-
-  // ربط الداشبورد لحظياً بتحديثات الموظف من تطبيق الموبايل أو لوحة الإدارة
-  sb.channel('kiswah-donor-live')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'donations' }, loadDonations)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'donation_items' }, loadDonations)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'donation_photos' }, loadDonations)
-    .subscribe();
-});
-
-async function loadUserProfile() {
   const { data: profile } = await sb
     .from('profiles')
     .select('*')
@@ -80,33 +52,35 @@ async function loadUserProfile() {
   currentProfile = profile || {
     id: currentUser.id,
     username: currentUser.email.split('@')[0],
-    full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email,
+    full_name: currentUser.user_metadata?.full_name || currentUser.email,
     role: 'donor'
   };
 
-  document.getElementById('dash-user-name').textContent = `مرحباً، ${currentProfile.full_name || currentProfile.username}`;
-  document.getElementById('dash-user-email').textContent = `${currentUser.email} (@${currentProfile.username})`;
-
-  const isStaff = ['employee', 'admin', 'super_admin'].includes(currentProfile.role);
-  if (isStaff) {
-    document.getElementById('dash-role-badge').textContent = 'لوحة الموظف والمستلم الميداني';
-    document.getElementById('dash-status-text').textContent = 'صلاحية موظف معتمد';
-    document.getElementById('employee-inspection-panel').style.display = 'block';
+  // توجيه تلقائي إذا كان الحساب موظفاً أو إدارة لبوابته المستقلة
+  if (currentProfile.role === 'employee') {
+    window.location.href = 'employee.html';
+    return;
+  }
+  if (currentProfile.role === 'admin' || currentProfile.role === 'super_admin') {
+    window.location.href = 'admin.html';
+    return;
   }
 
-  const isAdmin = currentProfile.role === 'admin' || currentProfile.role === 'super_admin';
-  if (isAdmin) {
-    const navActions = document.querySelector('.nav-actions');
-    if (navActions && !document.getElementById('go-admin-btn')) {
-      const adminLink = document.createElement('a');
-      adminLink.id = 'go-admin-btn';
-      adminLink.href = 'admin.html';
-      adminLink.className = 'btn-secondary';
-      adminLink.textContent = 'لوحة الإدارة';
-      navActions.prepend(adminLink);
-    }
-  }
-}
+  document.getElementById('donor-user-name').textContent = `مرحباً، ${currentProfile.full_name || currentProfile.username}`;
+  document.getElementById('donor-user-email').textContent = `${currentUser.email} • رقم الحساب: #${currentUser.id.slice(0, 8).toUpperCase()}`;
+
+  setupPickupModeButtons();
+  setupClothesIconsSelector();
+  setupDonorBookingForm();
+  setupLogoutButton();
+  await loadMyDonations();
+
+  window.KiswahRealtime.subscribe(() => {
+    loadMyDonations();
+  });
+
+  window.KiswahLoader.hide();
+});
 
 function setupPickupModeButtons() {
   const buttons = document.querySelectorAll('[data-pickup-mode]');
@@ -133,16 +107,18 @@ function setupClothesIconsSelector() {
 
       if (nextQty === 0) {
         delete selectedItemsState[iconKey];
-        card.classList.remove('selected');
+        card.style.borderColor = 'var(--border-light)';
+        card.style.background = 'var(--bg-page)';
       } else {
         selectedItemsState[iconKey] = {
           quantity: nextQty,
           size_label: selectedItemsState[iconKey]?.size_label || 'L',
           gender_age: selectedItemsState[iconKey]?.gender_age || 'unisex',
-          condition_label: selectedItemsState[iconKey]?.condition_label || 'good',
+          condition_label: selectedItemsState[iconKey]?.condition_label || 'like_new',
           details: selectedItemsState[iconKey]?.details || ''
         };
-        card.classList.add('selected');
+        card.style.borderColor = 'var(--green-dark)';
+        card.style.background = 'var(--bg-sand)';
       }
 
       qtyEl.textContent = nextQty;
@@ -160,9 +136,7 @@ function setupClothesIconsSelector() {
     });
 
     card.addEventListener('click', () => {
-      if (!selectedItemsState[iconKey]) {
-        updateQty(1);
-      }
+      if (!selectedItemsState[iconKey]) updateQty(1);
     });
   });
 }
@@ -183,64 +157,71 @@ function renderSelectedItemsDetails() {
   container.innerHTML = keys.map(key => {
     const item = selectedItemsState[key];
     return `
-      <div class="item-detail-box" data-detail-key="${key}">
-        <div class="item-detail-head">
-          <span>${ICON_LABELS[key]} (${item.quantity} قطعة)</span>
-          <span style="font-size: 11px; color: var(--text-muted);">تفاصيل القطعة</span>
+      <div class="form-group" data-detail-key="${key}" style="border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:12px; background:var(--bg-page);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="font-size:13.5px; color:var(--green-dark);">${ICON_LABELS[key]} (${item.quantity} قطعة)</strong>
+          <span style="font-size:11.5px; color:var(--text-muted);">حدّد مواصفات القطع</span>
         </div>
-        <div class="item-detail-row">
-          <select data-field="gender_age">
-            <option value="men" ${item.gender_age === 'men' ? 'selected' : ''}>رجالي</option>
-            <option value="women" ${item.gender_age === 'women' ? 'selected' : ''}>حريمي</option>
-            <option value="kids" ${item.gender_age === 'kids' ? 'selected' : ''}>أطفال</option>
-            <option value="unisex" ${item.gender_age === 'unisex' ? 'selected' : ''}>متنوع</option>
-          </select>
-          <select data-field="size_label">
-            <option value="S" ${item.size_label === 'S' ? 'selected' : ''}>مقاس S</option>
-            <option value="M" ${item.size_label === 'M' ? 'selected' : ''}>مقاس M</option>
-            <option value="L" ${item.size_label === 'L' ? 'selected' : ''}>مقاس L</option>
-            <option value="XL" ${item.size_label === 'XL' ? 'selected' : ''}>مقاس XL</option>
-            <option value="مقاسات متنوعة" ${item.size_label === 'مقاسات متنوعة' ? 'selected' : ''}>مقاسات متنوعة</option>
-          </select>
-          <select data-field="condition_label">
-            <option value="new" ${item.condition_label === 'new' ? 'selected' : ''}>جديد</option>
-            <option value="like_new" ${item.condition_label === 'like_new' ? 'selected' : ''}>كالجديد</option>
-            <option value="good" ${item.condition_label === 'good' ? 'selected' : ''}>حالة جيدة</option>
-          </select>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; margin-bottom:8px;">
+          <div class="input-capsule" style="height:38px; padding:0 8px;">
+            <select data-field="gender_age" style="font-size:12px;">
+              <option value="men" ${item.gender_age === 'men' ? 'selected' : ''}>رجالي</option>
+              <option value="women" ${item.gender_age === 'women' ? 'selected' : ''}>حريمي</option>
+              <option value="kids" ${item.gender_age === 'kids' ? 'selected' : ''}>أطفال</option>
+              <option value="unisex" ${item.gender_age === 'unisex' ? 'selected' : ''}>متنوع</option>
+            </select>
+          </div>
+          <div class="input-capsule" style="height:38px; padding:0 8px;">
+            <select data-field="size_label" style="font-size:12px;">
+              <option value="S" ${item.size_label === 'S' ? 'selected' : ''}>مقاس S</option>
+              <option value="M" ${item.size_label === 'M' ? 'selected' : ''}>مقاس M</option>
+              <option value="L" ${item.size_label === 'L' ? 'selected' : ''}>مقاس L</option>
+              <option value="XL" ${item.size_label === 'XL' ? 'selected' : ''}>مقاس XL</option>
+              <option value="مقاسات متنوعة" ${item.size_label === 'مقاسات متنوعة' ? 'selected' : ''}>مقاسات متنوعة</option>
+            </select>
+          </div>
+          <div class="input-capsule" style="height:38px; padding:0 8px;">
+            <select data-field="condition_label" style="font-size:12px;">
+              <option value="new" ${item.condition_label === 'new' ? 'selected' : ''}>جديد</option>
+              <option value="like_new" ${item.condition_label === 'like_new' ? 'selected' : ''}>كالجديد</option>
+              <option value="good" ${item.condition_label === 'good' ? 'selected' : ''}>حالة جيدة</option>
+            </select>
+          </div>
         </div>
-        <input type="text" data-field="details" placeholder="اكتب تفاصيل إضافية (مثال: 2 تيشيرت قطن صيفي + 1 شتوي)" value="${item.details}">
+        <div class="input-capsule" style="height:38px;">
+          <input type="text" data-field="details" placeholder="وصف إضافي للقطع (الألوان، الموسم، الخامة...)" value="${item.details}" style="font-size:12.5px;">
+        </div>
       </div>
     `;
   }).join('');
 
-  container.querySelectorAll('.item-detail-box').forEach(box => {
+  container.querySelectorAll('[data-detail-key]').forEach(box => {
     const key = box.getAttribute('data-detail-key');
     box.querySelectorAll('[data-field]').forEach(input => {
-      input.addEventListener('change', (e) => {
+      const sync = (e) => {
         selectedItemsState[key][e.target.getAttribute('data-field')] = e.target.value;
-      });
-      input.addEventListener('input', (e) => {
-        selectedItemsState[key][e.target.getAttribute('data-field')] = e.target.value;
-      });
+      };
+      input.addEventListener('change', sync);
+      input.addEventListener('input', sync);
     });
   });
 }
 
 function setupDonorBookingForm() {
-  const form = document.getElementById('dash-booking-form');
+  const form = document.getElementById('donor-booking-form');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const itemKeys = Object.keys(selectedItemsState);
     if (itemKeys.length === 0) {
-      alert('برجاء اختيار نوع واحد على الأقل من أيقونات الملابس وتحديد العدد.');
+      window.showKiswahToast('برجاء اختيار نوع واحد على الأقل من الملابس وتحديد العدد.');
       return;
     }
 
     const totalPieces = itemKeys.reduce((sum, key) => sum + selectedItemsState[key].quantity, 0);
     const submitBtn = document.getElementById('submit-donation-btn');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'جاري إرسال الطلب...';
+    window.KiswahLoader.show('جاري تسجيل طلب التبرع...');
 
     try {
       const { data: donation, error: donationErr } = await sb
@@ -273,110 +254,35 @@ function setupDonorBookingForm() {
         details: selectedItemsState[key].details || null
       }));
 
-      const { error: itemsErr } = await sb
-        .from('donation_items')
-        .insert(itemsPayload);
-
+      const { error: itemsErr } = await sb.from('donation_items').insert(itemsPayload);
       if (itemsErr) throw itemsErr;
 
       itemKeys.forEach(k => delete selectedItemsState[k]);
       document.querySelectorAll('.cloth-icon-card').forEach(c => {
-        c.classList.remove('selected');
+        c.style.borderColor = 'var(--border-light)';
+        c.style.background = 'var(--bg-page)';
         c.querySelector('.qty-val').textContent = '0';
       });
       renderSelectedItemsDetails();
       form.reset();
 
-      alert('تم تسجيل طلب التبرع بالملابس بنجاح!');
-      await loadDonations();
+      await loadMyDonations();
+      window.KiswahLoader.hide();
+      window.showKiswahToast('تم تسجيل طلب التبرع بنجاح وسيظهر للمندوب فوراً!');
     } catch (err) {
-      alert('حدث خطأ أثناء تسجيل التبرع: ' + err.message);
+      window.KiswahLoader.hide();
+      window.showKiswahToast('حدث خطأ: ' + err.message);
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'إرسال طلب التبرع';
     }
   });
 }
 
-function setupEmployeeInspectionForm() {
-  const form = document.getElementById('employee-verify-form');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const donationId = document.getElementById('inspect-donation-id').value;
-    const actualPieces = parseInt(document.getElementById('actual-pieces-input').value, 10);
-    const files = document.getElementById('inspection-photos-input').files;
-    const notes = document.getElementById('employee-notes-input').value.trim();
-
-    if (!donationId || files.length === 0) {
-      alert('برجاء اختيار الطلب وإرفاق صورة واحدة على الأقل للقطع المستلمة.');
-      return;
-    }
-
-    const btn = document.getElementById('submit-inspection-btn');
-    btn.disabled = true;
-    btn.textContent = 'جاري رفع الصور واعتماد الاستلام...';
-
-    try {
-      for (const file of files) {
-        const fileExt = file.name.split('.').pop();
-        const filePath = `${donationId}/${Date.now()}_${Math.random().toString(36).slice(2)}.${fileExt}`;
-
-        const { error: uploadErr } = await sb.storage
-          .from('donation-inspections')
-          .upload(filePath, file);
-
-        if (uploadErr) throw uploadErr;
-
-        const { data: publicUrlData } = sb.storage
-          .from('donation-inspections')
-          .getPublicUrl(filePath);
-
-        const { error: photoRowErr } = await sb
-          .from('donation_photos')
-          .insert([{
-            donation_id: donationId,
-            uploaded_by: currentUser.id,
-            photo_url: publicUrlData.publicUrl,
-            actual_count_in_photo: actualPieces,
-            notes: notes || null
-          }]);
-
-        if (photoRowErr) throw photoRowErr;
-      }
-
-      const { error: updateErr } = await sb
-        .from('donations')
-        .update({
-          actual_pieces_count: actualPieces,
-          verified_by: currentUser.id,
-          verified_at: new Date().toISOString(),
-          employee_notes: notes || null
-        })
-        .eq('id', donationId);
-
-      if (updateErr) throw updateErr;
-
-      form.reset();
-      alert('تم رفع صور الفحص واعتماد العدد الفعلي المستلم بنجاح.');
-      await loadDonations();
-    } catch (err) {
-      alert('تعذر حفظ الفحص: ' + err.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'حفظ الصور واعتماد العدد الفعلي';
-    }
-  });
-}
-
-async function loadDonations() {
+async function loadMyDonations() {
   const { data: donations, error } = await sb
     .from('donations')
-    .select(`
-      *,
-      donation_items (*),
-      donation_photos (*)
-    `)
+    .select('*, donation_items(*), donation_photos(*)')
+    .eq('user_id', currentUser.id)
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -385,31 +291,22 @@ async function loadDonations() {
   }
 
   const list = donations || [];
-  updateKpis(list);
-  renderDonationsList(list);
-  populateEmployeeSelect(list);
-}
 
-function updateKpis(list) {
   const totalOrders = list.length;
   const totalDeclared = list.reduce((sum, d) => sum + (d.declared_pieces_count || d.pieces_count || 0), 0);
-  const totalActual = list.reduce((sum, d) => sum + (d.actual_pieces_count ?? d.declared_pieces_count ?? d.pieces_count ?? 0), 0);
-  const doneOrders = list.filter(d => d.actual_pieces_count !== null || String(d.status).includes('تم التسليم')).length;
-  const activeOrders = totalOrders - doneOrders;
+  const totalVerified = list.reduce((sum, d) => sum + (d.actual_pieces_count ?? 0), 0);
+  const completedOrders = list.filter(d => d.actual_pieces_count !== null || String(d.status).includes('تم')).length;
 
-  document.getElementById('kpi-total-orders').textContent = totalOrders;
-  document.getElementById('kpi-total-pieces').textContent = `${totalDeclared} / ${totalActual}`;
-  document.getElementById('kpi-active-orders').textContent = activeOrders;
-  document.getElementById('kpi-done-orders').textContent = doneOrders;
-}
+  document.getElementById('donor-kpi-orders').textContent = totalOrders;
+  document.getElementById('donor-kpi-declared').textContent = `${totalDeclared} قطعة`;
+  document.getElementById('donor-kpi-verified').textContent = `${totalVerified} قطعة`;
+  document.getElementById('donor-kpi-completed').textContent = completedOrders;
 
-function renderDonationsList(list) {
-  const container = document.getElementById('dash-donations-list');
-
+  const container = document.getElementById('donor-donations-list');
   if (list.length === 0) {
     container.innerHTML = `
-      <div class="empty-state-box">
-        لا توجد طلبات تبرع مسجلة حتى الآن. اختر قطع الملابس من القائمة المجاورة لإضافة أول طلب.
+      <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
+        لا توجد تبرعات مسجلة في حسابك بعد. ابدأ باختيار قطع الملابس من القائمة المجاورة.
       </div>
     `;
     return;
@@ -418,66 +315,78 @@ function renderDonationsList(list) {
   container.innerHTML = list.map(d => {
     const declared = d.declared_pieces_count || d.pieces_count || 0;
     const hasActual = d.actual_pieces_count !== null && d.actual_pieces_count !== undefined;
-    const itemsHtml = (d.donation_items || []).map(item => `
-      <span class="mini-item-chip">
-        ${ICON_LABELS[item.item_icon] || item.item_icon}: <strong>${item.quantity}</strong>
-        ${item.size_label ? `(${item.size_label})` : ''}
-        ${item.details ? `— ${item.details}` : ''}
-      </span>
+    const stepLevel = hasActual ? 4 : (String(d.status).includes('جاري') ? 2 : 1);
+    const createdDate = d.created_at ? new Date(d.created_at).toLocaleDateString('ar-EG') : '';
+
+    const itemsRows = (d.donation_items || []).map(item => `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--white); border:1px solid var(--border-light); border-radius:10px; font-size:13px;">
+        <div>
+          <strong>${ICON_LABELS[item.item_icon] || item.item_icon}</strong>
+          <span style="color:var(--text-muted); margin-right:6px;">(${GENDER_LABELS[item.gender_age] || item.gender_age} • مقاس ${item.size_label} • ${CONDITION_LABELS[item.condition_label] || item.condition_label})</span>
+          ${item.details ? `<div style="font-size:12px; color:var(--text-muted);">${item.details}</div>` : ''}
+        </div>
+        <span class="badge-status">${item.quantity} قطعة</span>
+      </div>
     `).join('');
 
     const photosHtml = (d.donation_photos || []).map(p => `
       <a href="${p.photo_url}" target="_blank" rel="noopener">
-        <img src="${p.photo_url}" alt="صورة استلام الموظف">
+        <img src="${p.photo_url}" alt="توثيق الاستلام" style="width:54px; height:54px; object-fit:cover; border-radius:10px; border:1px solid var(--border-light);">
       </a>
     `).join('');
 
     return `
-      <article class="donation-item-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <strong style="font-size: 15px;">${d.campaign_name || 'تبرع ملابس'}</strong>
-          <span class="booking-step-tag">${hasActual ? 'تم الفحص والاستلام' : (d.status || 'قيد المراجعة')}</span>
-        </div>
-
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
-          ${d.pickup_mode} — ${d.address}
-        </p>
-
-        <div class="donation-badges-row">
-          ${itemsHtml || `<span class="mini-item-chip">ملابس (${declared} قطعة)</span>`}
-        </div>
-
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--text-muted); margin-top: 8px;">
-          <span>المعلن من المتبرع: <strong>${declared} قطعة</strong></span>
-          <span>المستلم فعلياً: <strong>${hasActual ? `${d.actual_pieces_count} قطعة` : 'في انتظار فحص الموظف'}</strong></span>
-          <span>الموعد: ${d.pickup_date || '-'}</span>
-        </div>
-
-        ${(hasActual || d.employee_notes || photosHtml) ? `
-          <div class="verification-box">
-            ${d.employee_notes ? `<p style="margin-bottom: 6px;"><strong>ملاحظة الموظف:</strong> ${d.employee_notes}</p>` : ''}
-            ${photosHtml ? `<div class="inspection-thumbs">${photosHtml}</div>` : ''}
+      <article class="donation-item" style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+          <div>
+            <span style="font-size:11.5px; color:var(--gold); font-weight:700;">طلب رقم #${String(d.id).slice(0, 8).toUpperCase()} • ${createdDate}</span>
+            <h3 style="font-size:17px; font-weight:700; margin-top:2px;">${d.campaign_name || 'تبرع ملابس'}</h3>
           </div>
-        ` : ''}
+          <span class="badge-status" style="background:${hasActual ? 'var(--green-dark)' : 'var(--bg-sand)'}; color:${hasActual ? 'var(--white)' : 'var(--text-main)'};">
+            ${hasActual ? 'تم الاستلام والفحص' : (d.status || 'بانتظار المندوب')}
+          </span>
+        </div>
+
+        <!-- شريط تتبع مراحل التبرع للمتبرع -->
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; font-size:11.5px; text-align:center;">
+          <div style="padding:6px; border-radius:8px; background:${stepLevel >= 1 ? 'var(--green-dark)' : 'var(--white)'}; color:${stepLevel >= 1 ? 'var(--white)' : 'var(--text-muted)'}; font-weight:600;">1. تم التسجيل</div>
+          <div style="padding:6px; border-radius:8px; background:${stepLevel >= 2 ? 'var(--green-dark)' : 'var(--white)'}; color:${stepLevel >= 2 ? 'var(--white)' : 'var(--text-muted)'}; font-weight:600;">2. في الطريق</div>
+          <div style="padding:6px; border-radius:8px; background:${stepLevel >= 3 ? 'var(--green-dark)' : 'var(--white)'}; color:${stepLevel >= 3 ? 'var(--white)' : 'var(--text-muted)'}; font-weight:600;">3. تم الفحص</div>
+          <div style="padding:6px; border-radius:8px; background:${stepLevel >= 4 ? 'var(--green-dark)' : 'var(--white)'}; color:${stepLevel >= 4 ? 'var(--white)' : 'var(--text-muted)'}; font-weight:600;">4. جاهز للتوزيع</div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:8px; font-size:13px; background:var(--white); padding:10px 12px; border-radius:10px; border:1px solid var(--border-light);">
+          <div><span style="color:var(--text-muted);">الطريقة:</span> <strong>${d.pickup_mode}</strong></div>
+          <div><span style="color:var(--text-muted);">الموعد:</span> <strong>${d.pickup_date || '-'}</strong></div>
+          <div><span style="color:var(--text-muted);">الهاتف:</span> <strong style="direction:ltr; display:inline-block;">${d.phone || '-'}</strong></div>
+          <div style="grid-column:1 / -1;"><span style="color:var(--text-muted);">العنوان:</span> <strong>${d.address}</strong></div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <strong style="font-size:13px;">تفاصيل القطع المعلنة (${declared} قطعة):</strong>
+          ${itemsRows || `<div style="font-size:13px; color:var(--text-muted);">${declared} قطعة ملابس</div>`}
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:10px; border-top:1px solid var(--border-light); font-size:13px;">
+          <div>
+            <span style="color:var(--text-muted);">المعلن:</span> <strong>${declared} قطعة</strong>
+            <span style="margin:0 8px;">|</span>
+            <span style="color:var(--text-muted);">المستلم الفعلي:</span> <strong>${hasActual ? `${d.actual_pieces_count} قطعة` : 'بانتظار فحص المندوب'}</strong>
+          </div>
+          ${photosHtml ? `<div style="display:flex; gap:6px;">${photosHtml}</div>` : ''}
+        </div>
+
+        ${d.employee_notes ? `<div style="font-size:12.5px; background:var(--bg-sand); padding:8px 12px; border-radius:8px;"><strong>تقرير الموظف المستلم:</strong> ${d.employee_notes}</div>` : ''}
       </article>
     `;
   }).join('');
-}
-
-function populateEmployeeSelect(list) {
-  const select = document.getElementById('inspect-donation-id');
-  if (!select) return;
-  select.innerHTML = list.map(d => `
-    <option value="${d.id}">
-      ${d.donor_name || 'متبرع'} — معلن: ${d.declared_pieces_count || d.pieces_count || 0} قطعة (${d.pickup_date || ''})
-    </option>
-  `).join('');
 }
 
 function setupLogoutButton() {
   const btn = document.querySelector('[data-logout-btn]');
   if (!btn) return;
   btn.addEventListener('click', async () => {
+    window.KiswahLoader.show('جاري تسجيل الخروج...');
     await sb.auth.signOut();
     window.location.href = 'login.html';
   });

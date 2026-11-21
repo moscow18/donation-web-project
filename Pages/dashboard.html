@@ -3,423 +3,190 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة التحكم — منصة كسوة</title>
+  <title>بوابة المتبرع — منصة كسوة</title>
   <link rel="stylesheet" href="../css/style.css">
-  <style>
-    .clothes-only-notice {
-      font-size: 13px;
-      color: var(--text-muted);
-      background: rgba(0, 0, 0, 0.03);
-      border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
-      padding: 10px 12px;
-      border-radius: 10px;
-      margin-bottom: 16px;
-    }
-    .clothes-icons-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .cloth-icon-card {
-      border: 1.5px solid var(--border, rgba(0, 0, 0, 0.12));
-      border-radius: 12px;
-      padding: 12px 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: 0.2s ease;
-      text-align: center;
-      user-select: none;
-    }
-    .cloth-icon-card.selected {
-      border-color: var(--primary, currentColor);
-      background: rgba(0, 0, 0, 0.04);
-    }
-    .cloth-icon-card svg {
-      width: 24px;
-      height: 24px;
-    }
-    .cloth-icon-name {
-      font-size: 13px;
-      font-weight: 700;
-    }
-    .cloth-qty-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 2px;
-    }
-    .qty-step-btn {
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
-      border: 1px solid var(--border, rgba(0, 0, 0, 0.2));
-      background: transparent;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-    }
-    .qty-val {
-      font-size: 13px;
-      font-weight: 700;
-      min-width: 18px;
-      text-align: center;
-    }
-    .selected-items-details {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .item-detail-box {
-      border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
-    .item-detail-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .item-detail-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .item-detail-row select,
-    .item-detail-box input {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid var(--border, rgba(0, 0, 0, 0.15));
-      border-radius: 8px;
-      font-size: 12px;
-      font-family: inherit;
-      background: transparent;
-      color: inherit;
-    }
-    .donation-item-card {
-      border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-    }
-    .donation-badges-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 8px 0;
-    }
-    .mini-item-chip {
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
-    }
-    .verification-box {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border, rgba(0, 0, 0, 0.15));
-      font-size: 12px;
-    }
-    .inspection-thumbs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-    .inspection-thumbs img {
-      width: 64px;
-      height: 64px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
-    }
-    @media (max-width: 600px) {
-      .clothes-icons-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .item-detail-row {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
 </head>
-<body class="dashboard-layout">
+<body>
 
-  <div id="dashboard-root">
-    <header class="navbar">
-      <div class="container navbar-inner">
-        <a href="../index.html" class="brand-logo">
-          <span class="brand-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"></path>
-            </svg>
-          </span>
-          <span>كسوة</span>
-        </a>
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <span class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"></path>
+          </svg>
+        </span>
+        <span>كسوة — بوابة المتبرع</span>
+      </a>
 
-        <div class="nav-actions">
-          <a href="../index.html" class="btn-secondary">الصفحة الرئيسية</a>
-          <button type="button" data-logout-btn="" class="btn-primary">تسجيل الخروج</button>
-        </div>
+      <div class="nav-actions">
+        <a href="../index.html" class="btn-secondary">الموقع الرئيسي</a>
+        <button type="button" data-logout-btn="" class="btn-primary">تسجيل الخروج</button>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <section class="dash-header-banner">
-      <div class="container dash-welcome-row">
-        <div>
-          <span id="dash-role-badge" class="booking-step-tag" style="margin-bottom: 8px; display: inline-block;">لوحة متابعة المتبرع</span>
-          <h1 id="dash-user-name" style="font-size: 26px; font-weight: 700;">جاري تحميل البيانات...</h1>
-          <p id="dash-user-email" style="font-size: 14px; color: var(--text-muted);"></p>
-        </div>
-        <div class="status-pill">
-          <span class="status-dot"></span>
-          <span id="dash-status-text">حساب نشط</span>
-        </div>
+  <section class="dash-header-banner">
+    <div class="container dash-welcome-row">
+      <div>
+        <span class="eyebrow-pill" style="margin-bottom:8px;">حساب متبرع معتمد</span>
+        <h1 id="donor-user-name" style="font-size:26px; font-weight:700;">جاري التحميل...</h1>
+        <p id="donor-user-email" style="font-size:14px; color:var(--text-muted);"></p>
       </div>
-    </section>
-
-    <main class="container">
-      <div class="dash-kpi-grid">
-        <div class="kpi-card">
-          <span>إجمالي طلبات التبرع</span>
-          <strong id="kpi-total-orders">0</strong>
-        </div>
-        <div class="kpi-card">
-          <span>إجمالي القطع (المعلن / المستلم)</span>
-          <strong id="kpi-total-pieces">0 / 0</strong>
-        </div>
-        <div class="kpi-card">
-          <span>طلبات قيد التنفيذ</span>
-          <strong id="kpi-active-orders">0</strong>
-        </div>
-        <div class="kpi-card">
-          <span>طلبات مكتملة التسليم</span>
-          <strong id="kpi-done-orders">0</strong>
-        </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span class="badge-status">تتبع مباشر لتبرعاتك</span>
       </div>
+    </div>
+  </section>
 
-      <div class="dash-main-grid">
-        <section class="dash-panel">
-          <div class="dash-panel-head">
-            <h2 style="font-size: 18px; font-weight: 700;">تسجيل طلب استلام جديد</h2>
-            <span class="booking-step-tag">ملابس فقط</span>
-          </div>
+  <main class="container">
+    <div class="dash-kpi-grid">
+      <div class="kpi-card">
+        <span>إجمالي تبرعاتي</span>
+        <strong id="donor-kpi-orders">0</strong>
+      </div>
+      <div class="kpi-card">
+        <span>القطع المعلنة من قبلي</span>
+        <strong id="donor-kpi-declared">0 قطعة</strong>
+      </div>
+      <div class="kpi-card">
+        <span>القطع المعتمدة بعد الفحص</span>
+        <strong id="donor-kpi-verified">0 قطعة</strong>
+      </div>
+      <div class="kpi-card">
+        <span>تبرعات مكتملة ووصلت</span>
+        <strong id="donor-kpi-completed">0</strong>
+      </div>
+    </div>
 
-          <div class="clothes-only-notice">
-            التبرعات المتاحة عبر المنصة تشمل <strong>الملابس فقط</strong> (مرفوض استقبال أثاث أو أجهزة). اختر قطع الملابس وأضف تفاصيلها، وسيقوم الموظف بتصويرها واعتماد العدد الفعلي عند الاستلام.
-          </div>
+    <div class="dash-main-grid">
+      <!-- نموذج تسجيل تبرع جديد للمتبرع -->
+      <section class="dash-panel">
+        <div class="dash-panel-head">
+          <h2 style="font-size:18px; font-weight:700;">إضافة تبرع ملابس جديد</h2>
+          <span id="selected-total-badge" class="badge-status">الإجمالي: 0 قطعة</span>
+        </div>
 
+        <form id="donor-booking-form">
           <div class="segmented-control">
             <button type="button" class="segment-btn active" data-pickup-mode="استلام من المنزل">استلام من المنزل</button>
-            <button type="button" class="segment-btn" data-pickup-mode="أقرب نقطة تجميع">أقرب نقطة تجميع</button>
+            <button type="button" class="segment-btn" data-pickup-mode="تسليم في الفرع">تسليم في الفرع</button>
           </div>
 
-          <form id="dash-booking-form">
-            <div class="form-group">
-              <div class="form-label-row">
-                <label class="form-label" for="pickup-campaign">المبادرة المستهدفة</label>
+          <div class="form-group">
+            <label class="form-label">اختر أنواع وكميات الملابس</label>
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+              <div class="cloth-icon-card" data-icon="tshirt" style="border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px; text-align:center; background:var(--bg-page); cursor:pointer;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:6px;">تيشيرت</div>
+                <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                  <button type="button" data-action="minus" class="btn-secondary" style="height:28px; padding:0 9px;">-</button>
+                  <span class="qty-val" style="font-weight:700;">0</span>
+                  <button type="button" data-action="plus" class="btn-secondary" style="height:28px; padding:0 9px;">+</button>
+                </div>
               </div>
-              <div class="input-capsule">
-                <select id="pickup-campaign">
-                  <option value="تبرع عام للأسر المستحقة">تبرع عام للأسر المستحقة</option>
-                  <option value="مبادرة شتاء دافئ لقرى الصعيد">مبادرة شتاء دافئ لقرى الصعيد</option>
-                  <option value="مبادرة جاهز للمدرسة للأيتام">مبادرة جاهز للمدرسة للأيتام</option>
-                  <option value="إعادة التدوير وصغار الحرفيين">إعادة التدوير وصغار الحرفيين</option>
-                </select>
+
+              <div class="cloth-icon-card" data-icon="pants" style="border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px; text-align:center; background:var(--bg-page); cursor:pointer;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:6px;">بنطلون</div>
+                <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                  <button type="button" data-action="minus" class="btn-secondary" style="height:28px; padding:0 9px;">-</button>
+                  <span class="qty-val" style="font-weight:700;">0</span>
+                  <button type="button" data-action="plus" class="btn-secondary" style="height:28px; padding:0 9px;">+</button>
+                </div>
+              </div>
+
+              <div class="cloth-icon-card" data-icon="jacket" style="border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px; text-align:center; background:var(--bg-page); cursor:pointer;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:6px;">جاكيت</div>
+                <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                  <button type="button" data-action="minus" class="btn-secondary" style="height:28px; padding:0 9px;">-</button>
+                  <span class="qty-val" style="font-weight:700;">0</span>
+                  <button type="button" data-action="plus" class="btn-secondary" style="height:28px; padding:0 9px;">+</button>
+                </div>
+              </div>
+
+              <div class="cloth-icon-card" data-icon="shirt" style="border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px; text-align:center; background:var(--bg-page); cursor:pointer;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:6px;">قميص</div>
+                <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                  <button type="button" data-action="minus" class="btn-secondary" style="height:28px; padding:0 9px;">-</button>
+                  <span class="qty-val" style="font-weight:700;">0</span>
+                  <button type="button" data-action="plus" class="btn-secondary" style="height:28px; padding:0 9px;">+</button>
+                </div>
+              </div>
+
+              <div class="cloth-icon-card" data-icon="dress" style="border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px; text-align:center; background:var(--bg-page); cursor:pointer;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:6px;">فستان</div>
+                <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                  <button type="button" data-action="minus" class="btn-secondary" style="height:28px; padding:0 9px;">-</button>
+                  <span class="qty-val" style="font-weight:700;">0</span>
+                  <button type="button" data-action="plus" class="btn-secondary" style="height:28px; padding:0 9px;">+</button>
+                </div>
+              </div>
+
+              <div class="cloth-icon-card" data-icon="kids_wear" style="border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px; text-align:center; background:var(--bg-page); cursor:pointer;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:6px;">ملابس أطفال</div>
+                <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                  <button type="button" data-action="minus" class="btn-secondary" style="height:28px; padding:0 9px;">-</button>
+                  <span class="qty-val" style="font-weight:700;">0</span>
+                  <button type="button" data-action="plus" class="btn-secondary" style="height:28px; padding:0 9px;">+</button>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div class="form-group">
-              <div class="form-label-row">
-                <label class="form-label">اختر قطع الملابس (حدّد العدد ثم أضف التفاصيل)</label>
-                <span id="selected-total-badge" style="font-size: 12px; font-weight: 700;">الإجمالي: 0 قطعة</span>
-              </div>
+          <div id="selected-items-details"></div>
 
-              <div class="clothes-icons-grid" id="clothes-icons-grid">
-                <div class="cloth-icon-card" data-icon="tshirt" data-label="تيشيرت">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
-                  </svg>
-                  <span class="cloth-icon-name">تيشيرت</span>
-                  <div class="cloth-qty-controls">
-                    <button type="button" class="qty-step-btn" data-action="minus">-</button>
-                    <span class="qty-val">0</span>
-                    <button type="button" class="qty-step-btn" data-action="plus">+</button>
-                  </div>
-                </div>
-
-                <div class="cloth-icon-card" data-icon="pants" data-label="بنطلون">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3h12l1 18h-4.5L12 10 9.5 21H5L6 3z"/>
-                    <path d="M6 7h12"/>
-                  </svg>
-                  <span class="cloth-icon-name">بنطلون</span>
-                  <div class="cloth-qty-controls">
-                    <button type="button" class="qty-step-btn" data-action="minus">-</button>
-                    <span class="qty-val">0</span>
-                    <button type="button" class="qty-step-btn" data-action="plus">+</button>
-                  </div>
-                </div>
-
-                <div class="cloth-icon-card" data-icon="jacket" data-label="جاكيت">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M16 3h2.5l2.5 5-2 2v11H5V10L3 8l2.5-5H8l4 3 4-3z"/>
-                    <path d="M12 6v15"/>
-                  </svg>
-                  <span class="cloth-icon-name">جاكيت</span>
-                  <div class="cloth-qty-controls">
-                    <button type="button" class="qty-step-btn" data-action="minus">-</button>
-                    <span class="qty-val">0</span>
-                    <button type="button" class="qty-step-btn" data-action="plus">+</button>
-                  </div>
-                </div>
-
-                <div class="cloth-icon-card" data-icon="shirt" data-label="قميص">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M8 3h8l4 4-2 3-2-1v12H8V9l-2 1-2-3 4-4z"/>
-                    <path d="M12 3v18"/>
-                  </svg>
-                  <span class="cloth-icon-name">قميص</span>
-                  <div class="cloth-qty-controls">
-                    <button type="button" class="qty-step-btn" data-action="minus">-</button>
-                    <span class="qty-val">0</span>
-                    <button type="button" class="qty-step-btn" data-action="plus">+</button>
-                  </div>
-                </div>
-
-                <div class="cloth-icon-card" data-icon="dress" data-label="فستان">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 3h6l-1 6 4 12H6l4-12-1-6z"/>
-                  </svg>
-                  <span class="cloth-icon-name">فستان</span>
-                  <div class="cloth-qty-controls">
-                    <button type="button" class="qty-step-btn" data-action="minus">-</button>
-                    <span class="qty-val">0</span>
-                    <button type="button" class="qty-step-btn" data-action="plus">+</button>
-                  </div>
-                </div>
-
-                <div class="cloth-icon-card" data-icon="kids_wear" data-label="ملابس أطفال">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M7 4h10l3 4-2 2-2-1v8l2 3h-4l-2-3-2 3H6l2-3V9l-2 1-2-2 3-4z"/>
-                  </svg>
-                  <span class="cloth-icon-name">ملابس أطفال</span>
-                  <div class="cloth-qty-controls">
-                    <button type="button" class="qty-step-btn" data-action="minus">-</button>
-                    <span class="qty-val">0</span>
-                    <button type="button" class="qty-step-btn" data-action="plus">+</button>
-                  </div>
-                </div>
-              </div>
-
-              <div id="selected-items-details" class="selected-items-details"></div>
+          <div class="form-group">
+            <label class="form-label" for="pickup-campaign">المبادرة المستهدفة</label>
+            <div class="input-capsule">
+              <select id="pickup-campaign" required>
+                <option value="كسوة الشتاء">كسوة الشتاء</option>
+                <option value="العودة للمدارس">العودة للمدارس</option>
+                <option value="كسوة العيد">كسوة العيد</option>
+                <option value="تبرع ملابس عام">تبرع ملابس عام</option>
+              </select>
             </div>
+          </div>
 
-            <div class="form-group">
-              <div class="form-label-row">
-                <label class="form-label" for="pickup-address">عنوان الاستلام</label>
-              </div>
-              <div class="input-capsule">
-                <input type="text" id="pickup-address" placeholder="المدينة، الحي، اسم الشارع ورقم العقار" required="">
-              </div>
+          <div class="form-group">
+            <label class="form-label" for="pickup-address">عنوان الاستلام بالتفصيل</label>
+            <div class="input-capsule">
+              <input type="text" id="pickup-address" required placeholder="المحافظة، المدينة، الحي، الشارع، رقم العقار">
             </div>
+          </div>
 
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div class="form-group">
-              <div class="form-label-row">
-                <label class="form-label" for="pickup-phone">رقم الهاتف للتواصل</label>
-              </div>
+              <label class="form-label" for="pickup-phone">رقم الهاتف للتواصل</label>
               <div class="input-capsule">
+                <input type="tel" id="pickup-phone" required placeholder="1012345678" style="direction:ltr; text-align:right;">
                 <span class="phone-prefix">+20</span>
-                <input type="tel" id="pickup-phone" placeholder="10X XXX XXXX" required="">
               </div>
             </div>
 
             <div class="form-group">
-              <div class="form-label-row">
-                <label class="form-label" for="pickup-date">تاريخ الاستلام</label>
-              </div>
+              <label class="form-label" for="pickup-date">تاريخ الاستلام المفضل</label>
               <div class="input-capsule">
-                <input type="date" id="pickup-date" required="">
+                <input type="date" id="pickup-date" required>
               </div>
             </div>
+          </div>
 
-            <button type="submit" id="submit-donation-btn" class="btn-primary btn-full">إرسال طلب التبرع</button>
-          </form>
-        </section>
+          <button type="submit" id="submit-donation-btn" class="btn-primary btn-full">تأكيد وإرسال طلب التبرع</button>
+        </form>
+      </section>
 
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-          <section id="employee-inspection-panel" class="dash-panel" style="display: none;">
-            <div class="dash-panel-head">
-              <h2 style="font-size: 18px; font-weight: 700;">فحص وتصوير التبرع المستلم (للموظف)</h2>
-              <span class="booking-step-tag">صلاحية موظف</span>
-            </div>
-
-            <form id="employee-verify-form">
-              <div class="form-group">
-                <div class="form-label-row">
-                  <label class="form-label" for="inspect-donation-id">اختر طلب التبرع</label>
-                </div>
-                <div class="input-capsule">
-                  <select id="inspect-donation-id" required=""></select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="form-label-row">
-                  <label class="form-label" for="actual-pieces-input">العدد الفعلي للقطع المستلمة</label>
-                </div>
-                <div class="input-capsule">
-                  <input type="number" id="actual-pieces-input" min="0" placeholder="مثلاً: 3" required="">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="form-label-row">
-                  <label class="form-label" for="inspection-photos-input">تصوير القطع المستلمة فعلياً</label>
-                </div>
-                <div class="input-capsule">
-                  <input type="file" id="inspection-photos-input" accept="image/*" multiple="" required="">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="form-label-row">
-                  <label class="form-label" for="employee-notes-input">ملاحظات الفحص والاستلام</label>
-                </div>
-                <div class="input-capsule">
-                  <input type="text" id="employee-notes-input" placeholder="مثال: تم استلام 3 قطع بدلاً من 5">
-                </div>
-              </div>
-
-              <button type="submit" id="submit-inspection-btn" class="btn-primary btn-full">حفظ الصور واعتماد العدد الفعلي</button>
-            </form>
-          </section>
-
-          <section class="dash-panel">
-            <div class="dash-panel-head">
-              <h2 style="font-size: 18px; font-weight: 700;">سجل تبرعاتك وطلبات الاستلام</h2>
-              <span style="font-size: 12px; color: var(--text-muted);">محدّث تلقائياً</span>
-            </div>
-
-            <div id="dash-donations-list" class="donation-list"></div>
-          </section>
+      <!-- سجل تبرعات المتبرع التفصيلي -->
+      <section class="dash-panel">
+        <div class="dash-panel-head">
+          <h2 style="font-size:18px; font-weight:700;">سجل تبرعاتي وتفاصيل كل طلب</h2>
+          <span class="badge-status">تحديث لحظي</span>
         </div>
-      </div>
-    </main>
-  </div>
+        <div id="donor-donations-list" class="donation-list"></div>
+      </section>
+    </div>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/kiswah-core.js"></script>
   <script src="../js/dashboard.js"></script>
 </body>
 </html>

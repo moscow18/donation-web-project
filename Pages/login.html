@@ -3,147 +3,254 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تسجيل الدخول — منصة كسوة</title>
+  <title>تسجيل الدخول وإنشاء حساب — منصة كسوة</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
   <main class="auth-split">
+
     <section class="auth-form-side">
-      <div class="auth-form-box">
-        <div class="auth-top-brand">
-          <a href="../index.html" class="brand-logo">
-            <span class="brand-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"/>
-              </svg>
-            </span>
-            <span>كسوة</span>
-          </a>
-        </div>
+      <div style="margin-bottom: 24px;">
+        <a href="../index.html" class="brand-logo">
+          <span class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"></path>
+            </svg>
+          </span>
+          <span>كسوة</span>
+        </a>
+      </div>
 
-        <div class="auth-header">
-          <h1 class="auth-title">تسجيل الدخول</h1>
-          <p class="auth-subtitle">أدخل بيانات حسابك للمتابعة إلى لوحة التحكم.</p>
-        </div>
-
-        <div class="social-stack">
-          <button type="button" data-google-auth class="social-btn-clean">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
-            <span>المتابعة باستخدام Google</span>
-          </button>
-
-          <button type="button" data-apple-auth class="social-btn-clean">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-            <span>المتابعة باستخدام Apple</span>
-          </button>
-        </div>
-
-        <div class="divider-line">أو عبر الحساب الشخصي</div>
-
-        <div class="segmented-control">
-          <button type="button" id="tab-email" class="segment-btn active">البريد الإلكتروني</button>
-          <button type="button" id="tab-phone" class="segment-btn">رقم الهاتف</button>
-        </div>
+      <!-- 1. تسجيل الدخول -->
+      <div id="view-login" class="auth-step-view">
+        <span class="eyebrow-pill">بوابة المتبرع والأسرة</span>
+        <h1 class="auth-title">مرحباً بعودتك</h1>
+        <p class="auth-subtitle">سجّل الدخول لمتابعة تبرعاتك وحالة الطلبات لحظياً.</p>
 
         <form id="login-form">
-          <div id="email-field-group" class="form-group">
-            <div class="form-label-row">
-              <label class="form-label" for="login-email">البريد الإلكتروني</label>
-            </div>
+          <div class="form-group">
+            <label class="form-label" for="login-email">البريد الإلكتروني</label>
             <div class="input-capsule">
-              <input type="email" id="login-email" placeholder="name@example.com">
-            </div>
-          </div>
-
-          <div id="phone-field-group" class="form-group" style="display: none;">
-            <div class="form-label-row">
-              <label class="form-label" for="login-phone">رقم الهاتف</label>
-            </div>
-            <div class="input-capsule">
-              <span class="phone-prefix">+20</span>
-              <input type="tel" id="login-phone" placeholder="10X XXX XXXX">
+              <input type="email" id="login-email" placeholder="name@example.com" style="direction:ltr; text-align:right;" required>
             </div>
           </div>
 
           <div class="form-group">
-            <div class="form-label-row">
-              <label class="form-label" for="login-password">كلمة المرور</label>
-              <a href="forgot-password.html" style="font-size: 12px; color: var(--text-muted); text-decoration: underline;">نسيت كلمة المرور؟</a>
-            </div>
+            <label class="form-label" for="login-password">كلمة المرور</label>
             <div class="input-capsule">
-              <input type="password" id="login-password" placeholder="أدخل كلمة المرور" required>
-              <button type="button" class="input-icon-btn" data-toggle-password="login-password" aria-label="إظهار كلمة المرور">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
+              <input type="password" id="login-password" placeholder="••••••••" style="direction:ltr; text-align:right;" required>
+              <button type="button" data-toggle-pass="login-password" style="background:none; color:var(--text-muted); font-size:12px; font-weight:600;">إظهار</button>
             </div>
           </div>
 
           <div class="form-options-row">
             <label class="checkbox-label">
-              <input type="checkbox" checked>
-              <span>تذكر تسجيل الدخول</span>
+              <input type="checkbox" id="remember-me" checked>
+              <span>تذكرني</span>
             </label>
-            <a href="otp.html" style="color: var(--text-muted);">لديك رمز تحقق؟</a>
+            <a href="javascript:void(0)" id="go-forgot-btn" style="font-weight:700;">نسيت كلمة المرور؟</a>
           </div>
 
           <button type="submit" class="btn-primary btn-full">تسجيل الدخول</button>
         </form>
 
-        <p class="auth-switch-text" style="margin-top: 20px;">
-          ليس لديك حساب؟ <a href="register.html">سجّل الآن</a>
+        <div class="divider-line">أو المتابعة باستخدام</div>
+
+        <div class="social-grid">
+          <button type="button" class="social-btn-clean" data-oauth="google">
+            <svg width="17" height="17" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.5H12v4.8h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.6 7.4C.6 9.4 0 11.6 0 14s.6 4.6 1.6 6.6l3.7-2.8z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 20.4 7.4 23 12 23z"/></svg>
+            <span>Google</span>
+          </button>
+
+          <button type="button" class="social-btn-clean" data-oauth="facebook">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>Facebook</span>
+          </button>
+
+          <button type="button" class="social-btn-clean" data-oauth="apple">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#18201C"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            <span>Apple</span>
+          </button>
+        </div>
+
+        <p style="text-align:center; font-size:13.5px; color:var(--text-muted);">
+          ليس لديك حساب؟ <a href="javascript:void(0)" id="go-register-btn" style="color:var(--text-main); font-weight:700;">إنشاء حساب</a>
         </p>
+      </div>
+
+      <!-- 2. إنشاء حساب -->
+      <div id="view-register" class="auth-step-view" style="display: none;">
+        <h1 class="auth-title">إنشاء حساب جديد</h1>
+        <p class="auth-subtitle">التأكيد واستلام أكواد التحقق يتم عبر البريد الإلكتروني.</p>
+
+        <div class="segmented-control">
+          <button type="button" class="segment-btn active" data-account-type="donor">حساب متبرع</button>
+          <button type="button" class="segment-btn" data-account-type="beneficiary">حساب أسرة مستفيدة</button>
+        </div>
+
+        <form id="register-form">
+          <div class="form-group">
+            <label class="form-label" for="reg-fullname">الاسم الكامل</label>
+            <div class="input-capsule">
+              <input type="text" id="reg-fullname" placeholder="مثال: أحمد نادر" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-email">البريد الإلكتروني</label>
+            <div class="input-capsule">
+              <input type="email" id="reg-email" placeholder="name@example.com" style="direction:ltr; text-align:right;" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-phone">رقم الهاتف (للتواصل عند الاستلام)</label>
+            <div class="input-capsule">
+              <input type="tel" id="reg-phone" placeholder="10 1234 5678" style="direction:ltr; text-align:right;">
+              <span class="phone-prefix">+20</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-password">كلمة المرور</label>
+            <div class="input-capsule">
+              <input type="password" id="reg-password" placeholder="8 أحرف على الأقل" style="direction:ltr; text-align:right;" required>
+              <button type="button" data-toggle-pass="reg-password" style="background:none; color:var(--text-muted); font-size:12px; font-weight:600;">إظهار</button>
+            </div>
+          </div>
+
+          <div class="form-options-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="reg-terms" required>
+              <span>أوافق على الشروط وسياسة الخصوصية</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-primary btn-full">إنشاء الحساب</button>
+        </form>
+
+        <div class="divider-line">أو التسجيل السريع عبر</div>
+
+        <div class="social-grid">
+          <button type="button" class="social-btn-clean" data-oauth="google"><span>Google</span></button>
+          <button type="button" class="social-btn-clean" data-oauth="facebook"><span>Facebook</span></button>
+          <button type="button" class="social-btn-clean" data-oauth="apple"><span>Apple</span></button>
+        </div>
+
+        <p style="text-align:center; font-size:13.5px; color:var(--text-muted);">
+          لديك حساب؟ <a href="javascript:void(0)" id="go-login-btn" style="color:var(--text-main); font-weight:700;">تسجيل الدخول</a>
+        </p>
+      </div>
+
+      <!-- 3. نسيت كلمة المرور -->
+      <div id="view-forgot" class="auth-step-view" style="display: none;">
+        <span class="eyebrow-pill">الخطوة 1 من 3</span>
+        <h1 class="auth-title">نسيت كلمة المرور؟</h1>
+        <p class="auth-subtitle">أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق مكون من 6 أرقام.</p>
+
+        <form id="forgot-form">
+          <div class="form-group">
+            <label class="form-label" for="forgot-email">البريد الإلكتروني</label>
+            <div class="input-capsule">
+              <input type="email" id="forgot-email" placeholder="name@example.com" style="direction:ltr; text-align:right;" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary btn-full">إرسال الرمز</button>
+        </form>
+
+        <p style="text-align:center; font-size:13.5px; color:var(--text-muted); margin-top:16px;">
+          تذكرتها؟ <a href="javascript:void(0)" id="back-login-from-forgot" style="color:var(--text-main); font-weight:700;">تسجيل الدخول</a>
+        </p>
+      </div>
+
+      <!-- 4. كود التحقق 6 أرقام -->
+      <div id="view-otp" class="auth-step-view" style="display: none;">
+        <span class="eyebrow-pill">الخطوة 2 من 3</span>
+        <h1 class="auth-title">أدخل رمز التحقق</h1>
+        <p class="auth-subtitle">أرسلنا رمزاً من 6 أرقام إلى بريدك الإلكتروني <strong id="otp-target-email" style="direction:ltr; display:inline-block;"></strong>.</p>
+
+        <form id="otp-form">
+          <div class="otp-boxes" id="otp-inputs-container">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="الرقم 1">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="الرقم 2">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="الرقم 3">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="الرقم 4">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="الرقم 5">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="الرقم 6">
+          </div>
+
+          <div class="form-options-row">
+            <span id="otp-timer-text" style="color:var(--text-muted); font-size:12.5px;">إعادة الإرسال بعد 0:59</span>
+            <a href="javascript:void(0)" id="change-email-btn" style="font-weight:700;">تغيير البريد الإلكتروني</a>
+          </div>
+
+          <button type="submit" class="btn-primary btn-full">تحقق</button>
+        </form>
+      </div>
+
+      <!-- 5. كلمة مرور جديدة -->
+      <div id="view-new-password" class="auth-step-view" style="display: none;">
+        <span class="eyebrow-pill">الخطوة 3 من 3</span>
+        <h1 class="auth-title">كلمة مرور جديدة</h1>
+        <p class="auth-subtitle">اختر كلمة مرور قوية من 8 أحرف على الأقل وتحتوي على رقم.</p>
+
+        <form id="new-pass-form">
+          <div class="form-group">
+            <label class="form-label" for="new-password">كلمة المرور الجديدة</label>
+            <div class="input-capsule">
+              <input type="password" id="new-password" placeholder="••••••••" style="direction:ltr; text-align:right;" required>
+              <button type="button" data-toggle-pass="new-password" style="background:none; color:var(--text-muted); font-size:12px; font-weight:600;">إظهار</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="confirm-new-password">تأكيد كلمة المرور</label>
+            <div class="input-capsule">
+              <input type="password" id="confirm-new-password" placeholder="••••••••" style="direction:ltr; text-align:right;" required>
+              <button type="button" data-toggle-pass="confirm-new-password" style="background:none; color:var(--text-muted); font-size:12px; font-weight:600;">إظهار</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary btn-full">حفظ كلمة المرور</button>
+        </form>
       </div>
     </section>
 
     <aside class="auth-visual-side">
-      <div class="visual-top-bar">
-        <a href="../index.html" class="brand-logo">
-          <span class="brand-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"/>
-            </svg>
-          </span>
-          <span>منصة كسوة</span>
-        </a>
-        <span class="clean-tag">بوابة المتبرعين</span>
+      <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px; font-size:20px; font-weight:700;">
+        <span>كسوة</span>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"></path>
+          <path d="M6 15.25h12"></path>
+        </svg>
       </div>
 
-      <div class="visual-center">
-        <div class="visual-photo-frame">
-          <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=900&q=80" alt="تجهيز تبرعات الملابس">
-        </div>
-
-        <h2 class="visual-title">إدارة تبرعاتك وطلبات الاستلام في مكان واحد</h2>
-        <p class="visual-desc">سجّل دخولك لجدولة مواعيد استلام الملابس الفائضة من منزلك ومتابعة حالة تسليمها للجمعيات المعتمدة.</p>
-
-        <div class="clean-stats-row">
-          <div class="clean-stat-cell">
-            <strong>+120 ألف</strong>
-            <span>قطعة موزعة</span>
-          </div>
-          <div class="clean-stat-cell">
-            <strong>18</strong>
-            <span>جمعية شريكة</span>
-          </div>
-          <div class="clean-stat-cell">
-            <strong>مجاناً</strong>
-            <span>استلام منزلي</span>
-          </div>
+      <div style="text-align:center; margin:24px 0;">
+        <div style="width:160px; height:160px; border-radius:50%; background:var(--green-soft); border:1.5px dashed rgba(182,146,90,0.6); margin:0 auto; display:flex; align-items:center; justify-content:center;">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8">
+            <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"></path>
+            <path d="M6 15.25h12"></path>
+          </svg>
         </div>
       </div>
 
-      <div class="visual-footer">
-        <span>© 2026 منصة كسوة</span>
-        <div class="visual-footer-links">
-          <a href="../index.html">الرئيسية</a>
-          <a href="register.html">حساب جديد</a>
+      <div>
+        <h2 style="font-size:28px; font-weight:700; margin-bottom:8px;">دائرة عطاء بين ٣</h2>
+        <p style="font-size:14px; color:rgba(255,255,255,0.75); margin-bottom:20px;">متبرع يجهّز، متطوع يوصّل، وأسرة تختار لأطفالها بكرامة.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <span class="eyebrow-pill dark" style="margin:0;">خصوصية الأسر أولاً</span>
+          <span class="eyebrow-pill dark" style="margin:0;">استلام من المركز</span>
+          <span class="eyebrow-pill dark" style="margin:0;">مجاني</span>
         </div>
       </div>
     </aside>
+
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../js/app.js"></script>
+  <script src="../js/kiswah-core.js"></script>
+  <script src="../js/auth.js"></script>
 </body>
 </html>
