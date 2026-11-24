@@ -28,7 +28,6 @@ let allProfiles = [];
 let timelineChartInstance = null;
 let categoryChartInstance = null;
 
-// طبقة الوصول للبيانات (Typed-like Data Access Layer)
 const KiswahService = {
   async getSessionAndProfile() {
     const { data: { session }, error } = await sb.auth.getSession();
@@ -157,6 +156,35 @@ const KiswahService = {
     if (itemErr) throw itemErr;
   },
 
+  async createStaffAccount({ fullName, email, password, role }) {
+    const tempClient = window.supabase.createClient(sb.supabaseUrl, sb.supabaseKey, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+
+    const { data, error } = await tempClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          role
+        }
+      }
+    });
+
+    if (error) throw error;
+
+    if (data?.user?.id) {
+      await sb.from('profiles').upsert({
+        id: data.user.id,
+        email,
+        username: email.split('@')[0],
+        full_name: fullName,
+        role
+      });
+    }
+  },
+
   async updateUserRole(userId, newRole) {
     const { error } = await sb.from('profiles').update({ role: newRole }).eq('id', userId);
     if (error) throw error;
@@ -233,7 +261,7 @@ window.switchAdminScreen = function (screenKey) {
     volunteers: { eyebrow: 'العمليات الميدانية', title: 'المتطوعون ومندوبو الاستلام' },
     families: { eyebrow: 'الرعاية الاجتماعية', title: 'الأسر المستفيدة وطلبات الكسوة' },
     reports: { eyebrow: 'التحليلات والتصدير', title: 'التقارير وتصدير ملفات Excel' },
-    admins: { eyebrow: 'صلاحيات Super Admin', title: 'إدارة المشرفين والصلاحيات' }
+    admins: { eyebrow: 'صلاحيات Super Admin', title: 'إدارة المشرفين وإنشاء الحسابات' }
   };
 
   document.querySelectorAll('.sidebar-link').forEach(btn => {
@@ -285,7 +313,29 @@ function setupEventListeners() {
   const admSearch = document.getElementById('adm-manage-search');
   if (admSearch) admSearch.addEventListener('input', renderAdminsScreen);
 
-  // إضافة رصيد وارد للمخزن
+  const createStaffForm = document.getElementById('super-create-user-form');
+  if (createStaffForm) {
+    createStaffForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fullName = document.getElementById('new-staff-name').value.trim();
+      const email = document.getElementById('new-staff-email').value.trim();
+      const password = document.getElementById('new-staff-password').value;
+      const role = document.getElementById('new-staff-role').value;
+
+      window.KiswahLoader.show('جاري إنشاء الحساب وتعيين الصلاحية...');
+      try {
+        await KiswahService.createStaffAccount({ fullName, email, password, role });
+        createStaffForm.reset();
+        await loadAndRenderAll();
+        window.KiswahLoader.hide();
+        window.showKiswahToast(`تم إنشاء حساب (${fullName}) بصلاحية ${role} بنجاح!`);
+      } catch (err) {
+        window.KiswahLoader.hide();
+        window.showKiswahToast('تعذر إنشاء الحساب: ' + err.message);
+      }
+    });
+  }
+
   document.getElementById('wh-add-stock-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const category = document.getElementById('wh-in-category').value;
@@ -305,7 +355,6 @@ function setupEventListeners() {
     }
   });
 
-  // صرف من المخزن إلى أسرة مستفيدة
   document.getElementById('wh-dispense-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const familySelect = document.getElementById('wh-out-family');
@@ -326,7 +375,6 @@ function setupEventListeners() {
     }
   });
 
-  // تسجيل الخروج
   const logoutBtn = document.querySelector('[data-logout-btn]');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
@@ -471,7 +519,6 @@ function renderOverviewScreen() {
 function renderOverviewCharts() {
   if (typeof Chart === 'undefined') return;
 
-  // 1. رسم بياني للتبرعات عبر الزمن
   const byDate = {};
   allDonations.forEach(d => {
     const day = (d.pickup_date || (d.created_at ? d.created_at.slice(0, 10) : 'غير محدد'));
@@ -513,7 +560,6 @@ function renderOverviewCharts() {
     });
   }
 
-  // 2. رسم بياني للتوزيع حسب فئة الملابس
   const catTotals = { tshirt: 0, pants: 0, jacket: 0, shirt: 0, dress: 0, kids_wear: 0 };
   allDonations.forEach(d => {
     (d.donation_items || []).forEach(item => {
@@ -666,7 +712,6 @@ function renderWarehouseScreen() {
   document.getElementById('wh-kpi-available').textContent = `${ledger.availableTotal} قطعة`;
   document.getElementById('wh-kpi-low').textContent = lowItems.length;
 
-  // تعبئة قائمة الأسر في نموذج الصرف من المخزن
   const famSelect = document.getElementById('wh-out-family');
   const families = allProfiles.filter(p => p.account_type === 'beneficiary' || p.role === 'beneficiary');
   if (families.length > 0) {

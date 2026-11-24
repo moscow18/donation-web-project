@@ -509,8 +509,7 @@
       </div>
     </div>
   </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/kiswah-core.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -532,20 +531,6 @@
           }
         }
       }
-
-      const updateLiveStats = async () => {
-        const { data } = await sb.from('donations').select('declared_pieces_count, actual_pieces_count, pieces_count');
-        if (data && data.length > 0) {
-          const total = data.reduce((s, d) => s + (d.actual_pieces_count ?? d.declared_pieces_count ?? d.pieces_count ?? 0), 0);
-          const statEl = document.getElementById('live-pieces-stat');
-          if (statEl && total > 0) {
-            statEl.textContent = `+${(120000 + total).toLocaleString('en-US')}`;
-          }
-        }
-      };
-
-      await updateLiveStats();
-      window.KiswahRealtime.subscribe(updateLiveStats);
     });
   </script>
 </body>
