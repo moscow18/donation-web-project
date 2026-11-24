@@ -3,147 +3,578 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>بوابة المنظمة والإدارة المركزية — منصة كسوة</title>
+  <title>كسوة — لوحة الإدارة والمخزن (Admin & Super Admin)</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="container navbar-inner">
-      <a href="../index.html" class="brand-logo">
-        <span class="brand-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"></path>
-          </svg>
-        </span>
-        <span>كسوة — بوابة المنظمة والإدارة</span>
-      </a>
-
-      <div class="nav-actions">
-        <a href="employee.html" class="btn-secondary">غرفة العمليات الميدانية</a>
-        <a href="../index.html" class="btn-secondary">الموقع الرئيسي</a>
-        <button type="button" data-logout-btn="" class="btn-primary">تسجيل الخروج</button>
-      </div>
-    </div>
-  </header>
-
-  <section class="dash-header-banner">
-    <div class="container dash-welcome-row">
+  <div class="admin-shell">
+    <!-- القائمة الجانبية (RTL Sidebar) -->
+    <aside class="admin-sidebar">
       <div>
-        <span id="admin-role-tag" class="eyebrow-pill" style="margin-bottom:8px;">إدارة المنظمة والجمعيات</span>
-        <h1 id="admin-user-name" style="font-size:26px; font-weight:700;">جاري التحميل...</h1>
-        <p id="admin-user-email" style="font-size:14px; color:var(--text-muted);"></p>
-      </div>
-      <div>
-        <span class="badge-status" style="background:var(--green-dark); color:var(--white);">رقابة شاملة ومزامنة لحظية</span>
-      </div>
-    </div>
-  </section>
-
-  <main class="container">
-    <!-- إحصائيات المنظمة -->
-    <div class="dash-kpi-grid">
-      <div class="kpi-card">
-        <span>إجمالي طلبات المنظمة</span>
-        <strong id="adm-kpi-orders">0</strong>
-      </div>
-      <div class="kpi-card">
-        <span>القطع المعلنة / المستلمة فعلياً</span>
-        <strong id="adm-kpi-pieces">0 / 0</strong>
-      </div>
-      <div class="kpi-card">
-        <span>طلبات بانتظار الفحص</span>
-        <strong id="adm-kpi-pending">0</strong>
-      </div>
-      <div class="kpi-card">
-        <span>المتبرعون / فريق العمل</span>
-        <strong id="adm-kpi-users">0 / 0</strong>
-      </div>
-    </div>
-
-    <!-- ملخص مخزون المنظمة حسب النوع والمبادرة -->
-    <section class="dash-panel" style="margin-bottom:24px;">
-      <div class="dash-panel-head">
-        <h2 style="font-size:17px; font-weight:700;">تحليل مخزون المنظمة حسب نوع الملابس والمبادرات</h2>
-        <span class="badge-status">تحديث تلقائي</span>
-      </div>
-      <div id="org-inventory-breakdown" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px;"></div>
-    </section>
-
-    <!-- تبويبات المنظمة الثلاثة -->
-    <section class="dash-panel" style="margin-bottom:56px;">
-      <div class="segmented-control" style="max-width:620px; grid-template-columns:repeat(3, 1fr);">
-        <button type="button" class="segment-btn active" data-tab="donations-tab">سجل التبرعات التفصيلي</button>
-        <button type="button" class="segment-btn" data-tab="staff-tab">فريق العمل والموظفون</button>
-        <button type="button" class="segment-btn" data-tab="donors-tab">قاعدة المتبرعين والصلاحيات</button>
-      </div>
-
-      <!-- 1. سجل التبرعات التفصيلي -->
-      <div id="donations-tab">
-        <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-          <div class="input-capsule" style="flex:1; min-width:240px;">
-            <input type="text" id="adm-donation-search" placeholder="بحث باسم المتبرع، الهاتف، العنوان، أو المبادرة...">
+        <a href="../index.html" class="sidebar-brand">
+          <span class="sidebar-brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"></path>
+              <path d="M6 15.25h12"></path>
+            </svg>
+          </span>
+          <div>
+            <div style="font-size:18px; font-weight:800; line-height:1.2;">منصة كسوة</div>
+            <div style="font-size:11.5px; color:rgba(255,255,255,0.7);">من خزانتك، إلى من يحتاجها</div>
           </div>
-          <div class="input-capsule" style="min-width:210px;">
-            <select id="adm-donation-filter">
-              <option value="all">جميع الطلبات</option>
-              <option value="unverified">بانتظار فحص الموظف</option>
-              <option value="verified">تم الفحص والتصوير</option>
-            </select>
+        </a>
+
+        <nav class="sidebar-nav" id="admin-sidebar-nav">
+          <button type="button" class="sidebar-link active" data-screen="overview">
+            <span class="sidebar-link-main">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+              <span>نظرة عامة</span>
+            </span>
+          </button>
+
+          <button type="button" class="sidebar-link" data-screen="donations">
+            <span class="sidebar-link-main">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+              <span>التبرعات ومسار الفرز</span>
+            </span>
+            <span id="nav-badge-donations" class="sidebar-badge">0</span>
+          </button>
+
+          <button type="button" class="sidebar-link" data-screen="warehouse">
+            <span class="sidebar-link-main">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35A2 2 0 0 1 3.26 6.5l8-3.2a2 2 0 0 1 1.48 0l8 3.2A2 2 0 0 1 22 8.35Z"/><path d="M6 18h12"/><path d="M6 14h12"/></svg>
+              <span>المخزن والمستودع</span>
+            </span>
+            <span id="nav-badge-warehouse" class="sidebar-badge">0</span>
+          </button>
+
+          <button type="button" class="sidebar-link" data-screen="volunteers">
+            <span class="sidebar-link-main">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>المتطوعون والمندوبون</span>
+            </span>
+          </button>
+
+          <button type="button" class="sidebar-link" data-screen="families">
+            <span class="sidebar-link-main">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>الأسر المستفيدة</span>
+            </span>
+          </button>
+
+          <button type="button" class="sidebar-link" data-screen="reports">
+            <span class="sidebar-link-main">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span>التقارير والتصدير</span>
+            </span>
+          </button>
+
+          <!-- يظهر لـ Super Admin فقط -->
+          <button type="button" id="nav-admins-btn" class="sidebar-link" data-screen="admins" style="display:none;">
+            <span class="sidebar-link-main">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>إدارة المشرفين</span>
+            </span>
+            <span class="sidebar-badge">Super</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-profile-box">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+          <strong id="sidebar-user-name" style="font-size:14px;">جاري التحميل...</strong>
+          <span id="sidebar-role-pill" class="sidebar-badge">Admin</span>
+        </div>
+        <div id="sidebar-user-email" style="font-size:12px; color:rgba(255,255,255,0.7); margin-bottom:12px; direction:ltr; text-align:right;"></div>
+        <div style="display:flex; gap:8px;">
+          <a href="../index.html" class="btn-secondary" style="height:34px; padding:0 12px; font-size:12px; flex:1;">الموقع</a>
+          <button type="button" data-logout-btn="" class="btn-gold" style="height:34px; padding:0 12px; font-size:12px; flex:1;">خروج</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div>
+          <span id="topbar-eyebrow" class="eyebrow-pill" style="margin-bottom:6px;">مركز القيادة والمخزن</span>
+          <h1 id="topbar-title" style="font-size:24px; font-weight:800;">نظرة عامة على المنصة</h1>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <span class="status-pill status-sorted">● متصل لحظياً بـ Supabase</span>
+          <button type="button" id="refresh-all-btn" class="btn-secondary" style="height:40px; padding:0 16px; font-size:13px;">تحديث البيانات</button>
+        </div>
+      </header>
+
+      <!-- ================================================================
+           1. شاشة نظرة عامة (Overview)
+           ================================================================ -->
+      <section id="screen-overview" class="admin-screen active">
+        <div class="kpi-grid-4">
+          <div class="kpi-card stagger-card" style="animation-delay:0.05s;">
+            <div class="kpi-card-top">
+              <span class="kpi-card-label">إجمالي التبرعات</span>
+              <span class="kpi-card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
+              </span>
+            </div>
+            <div id="kpi-total-donations" class="kpi-card-value">0</div>
+            <div class="kpi-card-sub">طلب تبرع مسجل على المنصة</div>
+          </div>
+
+          <div class="kpi-card stagger-card" style="animation-delay:0.1s;">
+            <div class="kpi-card-top">
+              <span class="kpi-card-label">القطع الموزعة والمخزنة</span>
+              <span class="kpi-card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V8l7 4.5a1.5 1.5 0 0 1-.8 2.75H4.8a1.5 1.5 0 0 1-.8-2.75L11 8V6.73A2 2 0 0 1 12 3Z"/></svg>
+              </span>
+            </div>
+            <div id="kpi-distributed-pieces" class="kpi-card-value">0</div>
+            <div id="kpi-warehouse-sub" class="kpi-card-sub">متاح بالمخزن: 0 قطعة</div>
+          </div>
+
+          <div class="kpi-card stagger-card" style="animation-delay:0.15s;">
+            <div class="kpi-card-top">
+              <span class="kpi-card-label">المتطوعون النشطون</span>
+              <span class="kpi-card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              </span>
+            </div>
+            <div id="kpi-active-volunteers" class="kpi-card-value">0</div>
+            <div class="kpi-card-sub">مندوب وموظف فحص ميداني</div>
+          </div>
+
+          <div class="kpi-card stagger-card" style="animation-delay:0.2s;">
+            <div class="kpi-card-top">
+              <span class="kpi-card-label">بانتظار الفحص والفرز</span>
+              <span class="kpi-card-icon" style="background:var(--gold-soft); color:var(--gold);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+            </div>
+            <div id="kpi-pending-inspections" class="kpi-card-value">0</div>
+            <div class="kpi-card-sub">طلبات تحتاج اعتماد ودخول المخزن</div>
           </div>
         </div>
 
-        <div id="adm-donations-detailed-list" class="donation-list"></div>
-      </div>
+        <!-- الرسوم البيانية -->
+        <div class="charts-grid-2">
+          <div class="panel-card stagger-card" style="animation-delay:0.25s;">
+            <div class="panel-head">
+              <h2 class="panel-title">حركة التبرعات والقطع المستلمة عبر الزمن</h2>
+              <span class="eyebrow-pill" style="margin:0;">تحديث تلقائي</span>
+            </div>
+            <div style="height:290px; position:relative;">
+              <canvas id="donationsTimelineChart"></canvas>
+            </div>
+          </div>
 
-      <!-- 2. فريق العمل والموظفون -->
-      <div id="staff-tab" style="display:none;">
-        <div style="overflow-x:auto; border:1px solid var(--border-light); border-radius:var(--radius-sm);">
-          <table style="width:100%; border-collapse:collapse; font-size:13.5px; text-align:right;">
+          <div class="panel-card stagger-card" style="animation-delay:0.3s;">
+            <div class="panel-head">
+              <h2 class="panel-title">التوزيع حسب فئة الملابس</h2>
+              <span class="eyebrow-pill" style="margin:0;">مخزون كسوة</span>
+            </div>
+            <div style="height:290px; position:relative;">
+              <canvas id="categoryDistributionChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- أحدث العمليات على المنصة -->
+        <div class="panel-card stagger-card" style="animation-delay:0.35s;">
+          <div class="panel-head">
+            <h2 class="panel-title">أحدث التبرعات وحركة المخزن</h2>
+            <button type="button" class="btn-secondary" style="height:36px; padding:0 14px; font-size:12.5px;" onclick="switchAdminScreen('donations')">عرض جميع التبرعات ←</button>
+          </div>
+          <div id="overview-recent-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           2. شاشة إدارة التبرعات ومسار الفرز (Donations Pipeline)
+           ================================================================ -->
+      <section id="screen-donations" class="admin-screen">
+        <div class="panel-card" style="margin-bottom:20px;">
+          <div style="display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:12px;">
+            <div class="input-capsule">
+              <input type="text" id="don-search" placeholder="بحث باسم المتبرع، الهاتف، العنوان، أو رقم الطلب...">
+            </div>
+            <div class="input-capsule">
+              <select id="don-pipeline-filter">
+                <option value="all">جميع مراحل المسار (Pipeline)</option>
+                <option value="received">1. تم الاستلام (Received)</option>
+                <option value="inspected">2. تم الفحص (Inspected)</option>
+                <option value="sorted">3. تم الفرز بالمخزن (Sorted)</option>
+                <option value="distributed">4. تم التوزيع (Distributed)</option>
+              </select>
+            </div>
+            <div class="input-capsule">
+              <select id="don-campaign-filter">
+                <option value="all">جميع المبادرات</option>
+                <option value="كسوة الشتاء">كسوة الشتاء</option>
+                <option value="العودة للمدارس">العودة للمدارس</option>
+                <option value="كسوة العيد">كسوة العيد</option>
+                <option value="تبرع ملابس عام">تبرع ملابس عام</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
             <thead>
-              <tr style="background:var(--bg-sand); border-bottom:1px solid var(--border-light);">
-                <th style="padding:12px 14px;">الموظف / الإداري</th>
-                <th style="padding:12px 14px;">البريد الإلكتروني</th>
-                <th style="padding:12px 14px;">الهاتف</th>
-                <th style="padding:12px 14px;">الرتبة</th>
-                <th style="padding:12px 14px;">الطلبات التي فحصها</th>
-                <th style="padding:12px 14px;">تعديل الصلاحية</th>
+              <tr>
+                <th>رقم الطلب والتاريخ</th>
+                <th>المتبرع والتواصل</th>
+                <th>تفاصيل الأصناف</th>
+                <th>المعلن / الفعلي</th>
+                <th>صور الفحص</th>
+                <th>مرحلة المسار (Pipeline)</th>
+                <th>إجراءات</th>
               </tr>
             </thead>
-            <tbody id="adm-staff-tbody"></tbody>
+            <tbody id="donations-pipeline-tbody"></tbody>
           </table>
         </div>
-      </div>
+      </section>
 
-      <!-- 3. قاعدة المتبرعين والصلاحيات -->
-      <div id="donors-tab" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-          <div class="input-capsule" style="flex:1; min-width:240px;">
-            <input type="text" id="adm-user-search" placeholder="بحث في قاعدة المتبرعين بالاسم أو الإيميل...">
+      <!-- ================================================================
+           3. شاشة المخزن والمستودع المربوطة بالتبرعات والأسر (Warehouse)
+           ================================================================ -->
+      <section id="screen-warehouse" class="admin-screen">
+        <div class="kpi-grid-4">
+          <div class="kpi-card">
+            <span class="kpi-card-label">إجمالي الوارد المفحوص للمخزن</span>
+            <div id="wh-kpi-in" class="kpi-card-value">0 قطعة</div>
+            <div class="kpi-card-sub">مرتبط بالتبرعات المفحوصة والمفروزة</div>
           </div>
-          <span id="super-admin-note" style="font-size:12.5px; color:var(--text-muted);"></span>
+          <div class="kpi-card">
+            <span class="kpi-card-label">إجمالي المصروف للأسر</span>
+            <div id="wh-kpi-out" class="kpi-card-value">0 قطعة</div>
+            <div class="kpi-card-sub">تم توزيعه وتسليمه للأسر</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-card-label">الرصيد المتاح حالياً بالمخزن</span>
+            <div id="wh-kpi-available" class="kpi-card-value" style="color:var(--green-dark);">0 قطعة</div>
+            <div class="kpi-card-sub">جاهز للصرف الفوري</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-card-label">أصناف منخفضة المخزون</span>
+            <div id="wh-kpi-low" class="kpi-card-value" style="color:var(--gold);">0</div>
+            <div class="kpi-card-sub">أقل من 5 قطع متاحة</div>
+          </div>
         </div>
 
-        <div style="overflow-x:auto; border:1px solid var(--border-light); border-radius:var(--radius-sm);">
-          <table style="width:100%; border-collapse:collapse; font-size:13.5px; text-align:right;">
+        <!-- نماذج تشغيل المخزن: إضافة وارد للمخزن + صرف طرد لأسرة مستفيدة -->
+        <div class="charts-grid-2" style="grid-template-columns:1fr 1fr; margin-bottom:24px;">
+          <!-- إضافة رصيد وارد للمخزن -->
+          <div class="panel-card">
+            <div class="panel-head">
+              <h2 class="panel-title">إضافة وارد جديد للمخزن</h2>
+              <span class="eyebrow-pill" style="margin:0;">إدخال مخزني</span>
+            </div>
+            <form id="wh-add-stock-form">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="form-group">
+                  <label class="form-label">فئة الملابس</label>
+                  <div class="input-capsule">
+                    <select id="wh-in-category" required>
+                      <option value="tshirt">تيشيرت</option>
+                      <option value="pants">بنطلون</option>
+                      <option value="jacket">جاكيت</option>
+                      <option value="shirt">قميص</option>
+                      <option value="dress">فستان</option>
+                      <option value="kids_wear">ملابس أطفال</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">المقاس</label>
+                  <div class="input-capsule">
+                    <select id="wh-in-size" required>
+                      <option value="S">S</option>
+                      <option value="M">M</option>
+                      <option value="L" selected>L</option>
+                      <option value="XL">XL</option>
+                      <option value="أطفال">أطفال</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">الحالة</label>
+                  <div class="input-capsule">
+                    <select id="wh-in-condition" required>
+                      <option value="new">جديد</option>
+                      <option value="like_new" selected>كالجديد</option>
+                      <option value="good">حالة جيدة</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">الكمية (قطعة)</label>
+                  <div class="input-capsule">
+                    <input type="number" id="wh-in-qty" min="1" value="10" required>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn-primary btn-full">تسجيل وإضافة للمخزن</button>
+            </form>
+          </div>
+
+          <!-- صرف من المخزن إلى أسرة مستفيدة -->
+          <div class="panel-card">
+            <div class="panel-head">
+              <h2 class="panel-title">صرف من المخزن لأسرة مستفيدة</h2>
+              <span class="eyebrow-pill" style="margin:0;">ربط مباشر بالأسر</span>
+            </div>
+            <form id="wh-dispense-form">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="form-group">
+                  <label class="form-label">الأسرة المستفيدة</label>
+                  <div class="input-capsule">
+                    <select id="wh-out-family" required></select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">الفئة المصروفة</label>
+                  <div class="input-capsule">
+                    <select id="wh-out-category" required>
+                      <option value="tshirt">تيشيرت</option>
+                      <option value="pants">بنطلون</option>
+                      <option value="jacket">جاكيت</option>
+                      <option value="shirt">قميص</option>
+                      <option value="dress">فستان</option>
+                      <option value="kids_wear">ملابس أطفال</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">المقاس</label>
+                  <div class="input-capsule">
+                    <select id="wh-out-size" required>
+                      <option value="S">S</option>
+                      <option value="M">M</option>
+                      <option value="L" selected>L</option>
+                      <option value="XL">XL</option>
+                      <option value="أطفال">أطفال</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">الكمية المصروفة</label>
+                  <div class="input-capsule">
+                    <input type="number" id="wh-out-qty" min="1" value="4" required>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn-gold btn-full">اعتماد الصرف وخصم من المخزن</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- فلاتر وبطاقات جرد المخزن -->
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2 class="panel-title">جرد المخزن حسب الفئة والمقاس والحالة</h2>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <div class="input-capsule" style="height:38px;">
+                <select id="wh-filter-category">
+                  <option value="all">كل الفئات</option>
+                  <option value="tshirt">تيشيرت</option>
+                  <option value="pants">بنطلون</option>
+                  <option value="jacket">جاكيت</option>
+                  <option value="shirt">قميص</option>
+                  <option value="dress">فستان</option>
+                  <option value="kids_wear">ملابس أطفال</option>
+                </select>
+              </div>
+              <div class="input-capsule" style="height:38px;">
+                <select id="wh-filter-condition">
+                  <option value="all">كل الحالات</option>
+                  <option value="new">جديد</option>
+                  <option value="like_new">كالجديد</option>
+                  <option value="good">حالة جيدة</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="warehouse-cards-grid" class="warehouse-grid"></div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           4. شاشة المتطوعين والمندوبين (Volunteers)
+           ================================================================ -->
+      <section id="screen-volunteers" class="admin-screen">
+        <div class="panel-card" style="margin-bottom:20px;">
+          <div class="panel-head" style="margin-bottom:0; padding-bottom:0; border:none;">
+            <div>
+              <h2 class="panel-title">فريق المتطوعين ومندوبي الاستلام والفحص</h2>
+              <p style="font-size:13px; color:var(--text-muted);">إحصائيات الأداء الميداني وعدد القطع التي تم فحصها واعتمادها لكل متطوع.</p>
+            </div>
+            <div class="input-capsule" style="min-width:260px;">
+              <input type="text" id="vol-search" placeholder="بحث باسم المتطوع أو البريد...">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
             <thead>
-              <tr style="background:var(--bg-sand); border-bottom:1px solid var(--border-light);">
-                <th style="padding:12px 14px;">اسم المتبرع</th>
-                <th style="padding:12px 14px;">البريد الإلكتروني</th>
-                <th style="padding:12px 14px;">الهاتف</th>
-                <th style="padding:12px 14px;">عدد تبرعاته</th>
-                <th style="padding:12px 14px;">إجمالي القطع</th>
-                <th style="padding:12px 14px;">ترقية / صلاحية</th>
+              <tr>
+                <th>المتطوع / المندوب</th>
+                <th>البريد والهاتف</th>
+                <th>الطلبات التي فحصها</th>
+                <th>إجمالي القطع المعتمدة</th>
+                <th>حالة النشاط</th>
               </tr>
             </thead>
-            <tbody id="adm-donors-tbody"></tbody>
+            <tbody id="volunteers-tbody"></tbody>
           </table>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
+      <!-- ================================================================
+           5. شاشة الأسر المستفيدة وطلباتها (Families)
+           ================================================================ -->
+      <section id="screen-families" class="admin-screen">
+        <div class="panel-card" style="margin-bottom:20px;">
+          <div class="panel-head" style="margin-bottom:0; padding-bottom:0; border:none;">
+            <div>
+              <h2 class="panel-title">الأسر المستفيدة المسجلة وطلبات الكسوة</h2>
+              <p style="font-size:13px; color:var(--text-muted);">متابعة الأسر المسجلة والطرود المصروفة لها من المخزن بخصوصية تامة.</p>
+            </div>
+            <div class="input-capsule" style="min-width:260px;">
+              <input type="text" id="fam-search" placeholder="بحث باسم الأسرة أو البريد...">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>الأسرة المستفيدة</th>
+                <th>بيانات التواصل</th>
+                <th>الطرود المستلمة من المخزن</th>
+                <th>إجمالي القطع المستلمة</th>
+                <th>إجراء سريع</th>
+              </tr>
+            </thead>
+            <tbody id="families-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           6. شاشة التقارير وتصدير Excel (Reports)
+           ================================================================ -->
+      <section id="screen-reports" class="admin-screen">
+        <div class="panel-card" style="margin-bottom:20px;">
+          <div class="panel-head">
+            <h2 class="panel-title">تصفية التقارير وتصدير ملف Excel (.xlsx)</h2>
+            <button type="button" id="export-excel-btn" class="btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>تصدير تقرير Excel شامل</span>
+            </button>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">من تاريخ</label>
+              <div class="input-capsule">
+                <input type="date" id="rep-date-from">
+              </div>
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">إلى تاريخ</label>
+              <div class="input-capsule">
+                <input type="date" id="rep-date-to">
+              </div>
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">المبادرة</label>
+              <div class="input-capsule">
+                <select id="rep-campaign">
+                  <option value="all">جميع المبادرات</option>
+                  <option value="كسوة الشتاء">كسوة الشتاء</option>
+                  <option value="العودة للمدارس">العودة للمدارس</option>
+                  <option value="كسوة العيد">كسوة العيد</option>
+                  <option value="تبرع ملابس عام">تبرع ملابس عام</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">مرحلة المسار</label>
+              <div class="input-capsule">
+                <select id="rep-pipeline">
+                  <option value="all">كل المراحل</option>
+                  <option value="received">تم الاستلام</option>
+                  <option value="inspected">تم الفحص</option>
+                  <option value="sorted">تم الفرز بالمخزن</option>
+                  <option value="distributed">تم التوزيع</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>التاريخ</th>
+                <th>المتبرع / الجهة</th>
+                <th>المبادرة</th>
+                <th>المرحلة</th>
+                <th>القطع المعلنة</th>
+                <th>القطع الفعلية</th>
+              </tr>
+            </thead>
+            <tbody id="reports-preview-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           7. شاشة إدارة المشرفين (Super Admin Only)
+           ================================================================ -->
+      <section id="screen-admins" class="admin-screen">
+        <div class="panel-card" style="margin-bottom:20px;">
+          <div class="panel-head" style="margin-bottom:0; padding-bottom:0; border:none;">
+            <div>
+              <span class="eyebrow-pill" style="margin-bottom:6px;">صلاحيات Super Admin فقط</span>
+              <h2 class="panel-title">إدارة المشرفين وتعيين الصلاحيات</h2>
+            </div>
+            <div class="input-capsule" style="min-width:260px;">
+              <input type="text" id="adm-manage-search" placeholder="بحث بالاسم أو البريد لتعيين مشرف...">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>الاسم الكامل</th>
+                <th>البريد الإلكتروني</th>
+                <th>الهاتف</th>
+                <th>الصلاحية الحالية</th>
+                <th>تغيير الرتبة</th>
+              </tr>
+            </thead>
+            <tbody id="admins-manage-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- المكتبات: Supabase + Chart.js + SheetJS Excel + Kiswah Core -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="../js/kiswah-core.js"></script>
   <script src="../js/admin.js"></script>
 </body>

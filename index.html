@@ -522,16 +522,14 @@
         const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
         const role = profile?.role || 'donor';
 
-        const targetUrl = (role === 'admin' || role === 'super_admin')
-          ? 'pages/admin.html'
-          : (role === 'employee' ? 'pages/employee.html' : 'pages/dashboard.html');
-
-        const loginBtn = document.getElementById('nav-login-btn');
-        const startBtn = document.getElementById('nav-start-btn');
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (startBtn) {
-          startBtn.href = targetUrl;
-          startBtn.textContent = role === 'donor' ? 'لوحة تبرعاتي' : (role === 'employee' ? 'غرفة العمليات' : 'إدارة المنظمة');
+        if (role === 'admin' || role === 'super_admin') {
+          const loginBtn = document.getElementById('nav-login-btn');
+          const startBtn = document.getElementById('nav-start-btn');
+          if (loginBtn) loginBtn.style.display = 'none';
+          if (startBtn) {
+            startBtn.href = 'pages/admin.html';
+            startBtn.textContent = 'لوحة الإدارة والمخزن';
+          }
         }
       }
 

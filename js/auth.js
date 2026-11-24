@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function redirectByUserRole(userId) {
-  window.KiswahLoader.show('جاري التوجيه إلى بوابتك الخاصة...');
+  window.KiswahLoader.show('جاري التحقق من صلاحيات الإدارة...');
   const { data: profile } = await sb
     .from('profiles')
     .select('role')
@@ -45,10 +45,10 @@ async function redirectByUserRole(userId) {
   const role = profile?.role || 'donor';
   if (role === 'admin' || role === 'super_admin') {
     window.location.href = 'admin.html';
-  } else if (role === 'employee') {
-    window.location.href = 'employee.html';
   } else {
-    window.location.href = 'dashboard.html';
+    window.KiswahLoader.hide();
+    await sb.auth.signOut();
+    window.showKiswahToast('بوابة الويب مخصصة للمشرفين (Admin / Super Admin) والمخزن فقط. يرجى استخدام تطبيق الموبايل.');
   }
 }
 
